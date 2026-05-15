@@ -10,5 +10,9 @@ def home():
 def pests_objectives():
     return render_template('objectives.html')
 
+@app.route('/pests/dataEngineering')
+def pests_data():
+    return render_template('dataEngineering.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

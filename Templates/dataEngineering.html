@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Data Engineering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+</head>
+<body>
+    {% include 'navbar.html' %}
+
+    <section class="hero">
+        <div class="hero-tag"> Data Processing</div>
+        <p>Preparation, transformation, normalization, and feature engineering applied to agricultural and climate datasets before training the machine learning model.</p>
+        <div class="hero-actions">
+            <a href="#dataset" class="btn-primary">Dataset</a>
+            <a href="#transformation" class="btn-outline">Transformations</a>
+            <a href="#results" class="btn-outline">Results</a>
+        </div>
+    </section>
+
+    <hr class="divider">
+
+    <div class="section" id="dataset">
+        <div class="section-header">
+            <h2>Dataset Description</h2>
+            <p>Overview of the agricultural and climate variables used in the preprocessing stage</p>
+        </div>
+
+        <div class="obj-grid">
+            <div class="obj-card">
+                <div class="obj-num">Dataset 01</div>
+                <h3>Initial Structure</h3>
+                <p>The dataset originally contained agricultural, climate, and phytosanitary variables related to crops and pest alerts in Colombian municipalities.</p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Dataset 02</div>
+                <h3>Rows & Columns</h3>
+                <p>After preprocessing, the dataset contained 1607 rows and 16 columns ready for machine learning training and evaluation.</p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Dataset 03</div>
+                <h3>Main Variables</h3>
+                <p>The dataset includes variables such as crop type, municipality, average temperature, total precipitation, pest alerts, species, and crop yield indicators.</p>
+            </div>
+        </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="transformation">
+        <div class="section-header">
+            <h2>Data Transformation Process</h2>
+            <p>Main preprocessing and feature engineering techniques applied before model training</p>
+        </div>
+
+        <div class="q-grid">
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <h3>Temporal Separation</h3>
+                </div>
+                <ul>
+                    <li>The <strong>period</strong> variable was divided into two new columns: <strong>year</strong> and <strong>season</strong>.</li>
+                    <li>This transformation improves temporal interpretation and allows the model to identify seasonal climate behavior associated with pest propagation.</li>
+                </ul>
+            </div>
+          
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <h3>Missing Values Handling</h3>
+                </div>
+                <ul>
+                    <li>Missing values were detected in the <strong>pest_name</strong> and <strong>species</strong> columns.</li>
+                    <li>To avoid inconsistencies during model training, empty values were replaced with the labels <strong>Pest_free</strong> and <strong>Unknown</strong>.</li>
+                </ul>
+            </div>
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <h3>Feature Engineering</h3>
+                </div>
+                <ul>
+                    <li>A new variable called <strong>climate_risk</strong> was created based on temperature and precipitation thresholds.</li>
+                    <li>If the average temperature exceeded 28°C and precipitation was greater than 100 mm, the record was classified as high climate risk.</li>
+                    <li>This variable helps represent environmental conditions favorable to pest propagation.</li>
+                </ul>
+            </div>
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <h3>Data Categorization</h3>
+                </div>
+                <ul>
+                    <li>Temperature and precipitation values were grouped into <strong>low</strong>, <strong>medium</strong>, and <strong>high</strong> categories.</li>
+                    <li>This transformation simplifies climate interpretation and improves pattern detection for the machine learning model.</li>
+                </ul>
+            </div>
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <h3>Encoding Process</h3>
+                </div>
+                <ul>
+                    <li>Machine learning algorithms cannot process text values directly.</li>
+                    <li>Categorical variables such as municipality, crop type, species, and pest names were transformed into numerical representations using Label Encoding.</li>
+                </ul>
+            </div>
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <h3>Normalization</h3>
+                </div>
+                <ul>
+                    <li>Numerical variables such as crop yield, relative yield, temperature, and precipitation were normalized using MinMaxScaler.</li>
+                    <li>This process scales values between 0 and 1, preventing variables with large ranges from dominating the training process.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <hr class="divider">
+
+    <div class="section" id="results">
+        <div class="section-header">
+            <h2>Results & Conclusions</h2>
+            <p>Final dataset status after preprocessing and transformation</p>
+        </div>
+
+        <div class="obj-grid">
+
+            <div class="obj-card">
+                <div class="obj-num">Result 01</div>
+                <h3>Processed Dataset</h3>
+                <p>The preprocessing pipeline generated a structured dataset suitable for machine learning training and future predictive analysis.</p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Result 02</div>
+                <h3>Improved Data Representation</h3>
+                <p>Feature engineering and categorization improved the representation of climate and agricultural conditions associated with pest outbreaks.</p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Result 03</div>
+                <h3>Model Readiness</h3>
+                <p>The final dataset was normalized, encoded, and prepared for training supervised machine learning algorithms for pest alert prediction.</p>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+        <div class="footer-stack">
+            <span>Python</span>
+            <span>pandas</span>
+            <span>scikit-learn</span>
+            <span>Flask</span>
+        </div>
+    </footer>
+</body>
+</html>

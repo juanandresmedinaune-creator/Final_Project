@@ -55,6 +55,3 @@ numeric_cols = [
 ]
 
 data[numeric_cols] = scaler.fit_transform(data[numeric_cols])
-
-
-

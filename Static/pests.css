@@ -180,6 +180,7 @@ body {
 .q-panel {
     background: var(--bg-card); border: 1px solid var(--border);
     border-radius: var(--radius-md); padding: 24px; transition: border-color 0.25s;
+    overflow: hidden;
 }
 .q-panel:hover { border-color: var(--accent-border); }
 .q-panel-header {
@@ -194,6 +195,11 @@ body {
     font-size: 0.85rem; color: var(--text-secondary);
     padding: 9px 0; border-bottom: 1px solid var(--border);
     line-height: 1.55; display: flex; gap: 10px;
+    display: block;
+    line-height: 1.7;
+    word-break: normal;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 .q-panel ul li:last-child { border-bottom: none; padding-bottom: 0; }
 .q-panel ul li::before { content: "›"; color: var(--accent); font-weight: 700; font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
