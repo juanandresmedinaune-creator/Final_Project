@@ -9,11 +9,14 @@
     {% include 'navbar.html' %}
 
     <section class="hero">
-        <div class="hero-tag"> Data Processing</div>
+        <div class="hero-tag"> Dataset</div>
+        <h1> Data Engineering</h1>
         <p>Preparation, transformation, normalization, and feature engineering applied to agricultural and climate datasets before training the machine learning model.</p>
         <div class="hero-actions">
             <a href="#dataset" class="btn-primary">Dataset</a>
+            <a href="#variables" class="btn-primary">Data Variables</a>
             <a href="#transformation" class="btn-outline">Transformations</a>
+            <a href="#before-after" class="btn-outline">Before-After</a>
             <a href="#results" class="btn-outline">Results</a>
         </div>
     </section>
@@ -48,6 +51,84 @@
     </div>
 
     <hr class="divider">
+
+    <div class="section" id="variables">
+
+        <div class="section-header">
+            <div>
+                <h2>Dataset Variables</h2>
+                <p>Main variables used during preprocessing and machine learning training</p>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Type</th>
+                        <th>Description</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td><strong>Department</strong></td>
+                        <td>Categorical</td>
+                        <td>Colombian department where the crop is located</td>
+                        <td>Geographic context</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Municipality</strong></td>
+                        <td>Categorical</td>
+                        <td>Municipality identifier</td>
+                        <td>Location reference</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Crop</strong></td>
+                        <td>Categorical</td>
+                        <td>Type of agricultural crop</td>
+                        <td>Crop classification</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Avg_temperature</strong></td>
+                        <td>Numerical</td>
+                        <td>Average environmental temperature</td>
+                        <td>Climate predictor</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Total_precipitation</strong></td>
+                        <td>Numerical</td>
+                        <td>Total precipitation recorded</td>
+                        <td>Climate predictor</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Pest_alert</strong></td>
+                        <td>Binary</td>
+                        <td>Presence or absence of pest alert</td>
+                        <td>Target variable</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Climate_risk</strong></td>
+                        <td>Binary</td>
+                        <td>Derived variable based on climate thresholds</td>
+                        <td>Feature engineering</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
 
     <div class="section" id="transformation">
         <div class="section-header">
@@ -119,6 +200,68 @@
         </div>
     </div>
 
+
+    <hr class="divider">
+
+    <div class="section" id="before-after">
+        <div class="section-header">
+            <div>
+                <h2>Before & After Transformation</h2>
+                <p>Examples of how the dataset changed after preprocessing</p>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Original Value</th>
+                        <th>Transformation</th>
+                        <th>Final Result</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td><strong>2020A</strong></td>
+                        <td>Temporal separation</td>
+                        <td>year = 2020 / season = A</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>null</strong></td>
+                        <td>Missing value handling</td>
+                        <td>Pest_free / Unknown</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Text values</strong></td>
+                        <td>Label Encoding</td>
+                        <td>Numerical representation</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>32°C + 150 mm</strong></td>
+                        <td>Feature engineering</td>
+                        <td>climate_risk = 1</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>2500</strong></td>
+                        <td>Normalization</td>
+                        <td>0.81</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
     <hr class="divider">
 
