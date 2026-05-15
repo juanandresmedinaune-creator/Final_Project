@@ -1,0 +1,9 @@
+<nav class="navbar">
+    <a href="/" class="navbar-brand"><span></span> AgriML</a>
+    <div class="navbar-links">
+        <a href="/" {% if request.path == '/' %}class="active"{% endif %}>Home</a>
+        <a href="/pests/objectives" {% if '/pests' in request.path %}class="active"{% endif %}>Objectives</a>
+        <a href="/pests/objectives#questions" {% if '/pests' in request.path %}class="active"{% endif %}>Key Questions</a>
+        <a href="/pests/objectives#data">Data Sources</a>
+    </div>
+</nav>

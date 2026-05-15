@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Objectives & Key Questions — AgriML</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<section class="hero">
+    <div class="hero-tag">📋 Project Definition</div>
+    <h1>Business Objectives &<br><em>Key Questions</em></h1>
+    <p>Translating agricultural business needs into concrete ML goals and specific questions the model must answer.</p>
+    <div class="hero-actions">
+        <a href="#objectives" class="btn-primary">Objectives</a>
+        <a href="#questions" class="btn-outline">Key Questions</a>
+        <a href="#data" class="btn-outline">Data Sources</a>
+    </div>
+</section>
+
+<hr class="divider">
+
+<div class="section" id="objectives">
+    <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div>
+            <h2>Business Objectives</h2>
+            <p>Six goals that translate real agricultural needs into measurable ML outcomes</p>
+        </div>
+    </div>
+    <div class="obj-grid">
+        <div class="obj-card">
+            <div class="obj-num">Objective 01</div>
+            <h3>Reduce Economic Losses</h3>
+            <p>Anticipate outbreaks 7–14 days in advance so farmers and agronomists can activate preventive measures before the pest spreads, lowering intervention costs.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Objective 02</div>
+            <h3>Support Agricultural Decision-Making</h3>
+            <p>Provide ICA, Agronet, and coffee grower associations with an interpretable model that classifies infestation risk by municipality and crop type.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Objective 03</div>
+            <h3>Optimize Agrochemical Use</h3>
+            <p>Target phytosanitary applications only to high-risk zones and time windows based on model predictions, reducing costs and environmental impact.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Objective 04</div>
+            <h3>Build a Reproducible Data Pipeline</h3>
+            <p>Integrate open climate data from IDEAM and Ministry of Agriculture records into an automated pipeline that continuously feeds and retrains the model.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Objective 05</div>
+            <h3>Deploy Scalable Early-Warning Alerts</h3>
+            <p>Build a web interface where field technicians enter local variables and get real-time risk predictions by crop type (coffee, rice, banana, etc.).</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Objective 06</div>
+            <h3>Validate on Colombian Regional Data</h3>
+            <p>Achieve F1-score ≥ 0.80 on priority crops from Huila, Tolima, Cundinamarca, and the Coffee Region, ensuring the model generalizes across unseen locations.</p>
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<div class="section" id="questions">
+    <div class="section-header">
+        <div class="section-icon">❓</div>
+        <div>
+            <h2>Key Questions for the Model</h2>
+            <p>Specific questions that guide what the model must predict or explain</p>
+        </div>
+    </div>
+    <div class="q-grid">
+        <div class="q-panel">
+            <div class="q-panel-header">
+                <span class="icon">🔮</span>
+                <h3>Prediction & Classification</h3>
+            </div>
+            <ul>
+                <li>What is the probability of a specific pest (e.g., Hypothenemus hampei, coffee rust, whitefly) appearing in a municipality within the next 14 days, based on temperature, humidity, and rainfall?</li>
+                <li>What risk level (low / medium / high / critical) does a plot present based on current climate conditions and historical infestation records?</li>
+            </ul>
+        </div>
+        <div class="q-panel">
+            <div class="q-panel-header">
+                <span class="icon">🌡️</span>
+                <h3>Variables & Feature Importance</h3>
+            </div>
+            <ul>
+                <li>Which climate variables (max/min temperature, precipitation, wind, soil moisture) are the strongest predictors for each pest type and crop?</li>
+                <li>Is there a climate threshold (e.g., humidity > 80% + temperature 20–25°C for 5 consecutive days) that triggers outbreaks with high statistical confidence?</li>
+            </ul>
+        </div>
+        <div class="q-panel">
+            <div class="q-panel-header">
+                <span class="icon">🗺️</span>
+                <h3>Spatiotemporal Spread</h3>
+            </div>
+            <ul>
+                <li>Which neighboring municipalities are most likely to experience spread once an outbreak is detected, considering wind patterns and farm connectivity?</li>
+                <li>Within what time window does a pest propagate from its focus to exceed the economic damage threshold in adjacent crops?</li>
+            </ul>
+        </div>
+        <div class="q-panel">
+            <div class="q-panel-header">
+                <span class="icon">🗄️</span>
+                <h3>Data Availability & Quality</h3>
+            </div>
+            <ul>
+                <li>Are ICA and Agronet historical records sufficient in temporal and geographic coverage to train a supervised model with reliable presence/absence labels?</li>
+                <li>How should missing IDEAM climate data in rural low-coverage zones be imputed or handled?</li>
+            </ul>
+        </div>
+        <div class="q-panel">
+            <div class="q-panel-header">
+                <span class="icon">📊</span>
+                <h3>Impact & Evaluation</h3>
+            </div>
+            <ul>
+                <li>By how much would estimated crop losses decrease if farmers acted on model alerts compared to no predictive intervention (baseline)?</li>
+                <li>How well does the model generalize to unseen crops and pest species driven by climate change?</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<hr class="divider">
+
+<div class="section" id="data">
+    <div class="section-header">
+        <div class="section-icon">📡</div>
+        <div>
+            <h2>Open Data Sources</h2>
+            <p>Publicly available datasets used for training, validation, and enrichment</p>
+        </div>
+    </div>
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>Data Type</th>
+                    <th>Use in the Model</th>
+                    <th>Access</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>IDEAM</strong></td>
+                    <td>Temperature, humidity, precipitation, wind</td>
+                    <td>Climate predictor variables</td>
+                    <td><span class="badge badge-green">Open</span></td>
+                </tr>
+                <tr>
+                    <td><strong>ICA</strong></td>
+                    <td>Pest and disease outbreak reports</td>
+                    <td>Target variable (presence / absence)</td>
+                    <td><span class="badge badge-blue">Public</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Agronet</strong></td>
+                    <td>Planted areas and crop production</td>
+                    <td>Geographic and crop context</td>
+                    <td><span class="badge badge-green">Open</span></td>
+                </tr>
+                <tr>
+                    <td><strong>Ministry of Agriculture</strong></td>
+                    <td>National agricultural records</td>
+                    <td>Enrichment and validation</td>
+                    <td><span class="badge badge-blue">Public</span></td>
+                </tr>
+                <tr>
+                    <td><strong>NASA POWER</strong></td>
+                    <td>Satellite-derived climate data</td>
+                    <td>Fill-in for zones without ground stations</td>
+                    <td><span class="badge badge-amber">Free API</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<footer>
+    <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+    <div class="footer-stack">
+        <span>Python</span><span>Flask</span>
+        <span>scikit-learn</span><span>pandas</span>
+    </div>
+</footer>
+
+</body>
+</html>
