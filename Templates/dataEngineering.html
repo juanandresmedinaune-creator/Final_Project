@@ -1,27 +1,257 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Data Engineering</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
 </head>
+
 <body>
     {% include 'navbar.html' %}
 
     <section class="hero">
         <div class="hero-tag"> Dataset</div>
         <h1> Data Engineering</h1>
-        <p>Preparation, transformation, normalization, and feature engineering applied to agricultural and climate datasets before training the machine learning model.</p>
+        <p>Preparation, transformation, normalization, and feature engineering applied to agricultural and climate
+            datasets before training the machine learning model.</p>
         <div class="hero-actions">
-            <a href="#dataset" class="btn-primary">Dataset</a>
-            <a href="#variables" class="btn-primary">Data Variables</a>
-            <a href="#transformation" class="btn-outline">Transformations</a>
-            <a href="#before-after" class="btn-outline">Before-After</a>
-            <a href="#results" class="btn-outline">Results</a>
+
+            <a href="#dataset-selection" class="btn-primary">
+                Dataset Sources
+            </a>
+
+            <a href="#dataset" class="btn-primary">
+                Dataset
+            </a>
+
+            <a href="#variables" class="btn-outline">
+                Data Variables
+            </a>
+
+            <a href="#transformation" class="btn-outline">
+                Transformations
+            </a>
+
+            <a href="#before-after" class="btn-outline">
+                Before & After
+            </a>
+
+            <a href="#results" class="btn-outline">
+                Results
+            </a>
+
         </div>
+
     </section>
 
     <hr class="divider">
+
+    <hr class="divider">
+
+    <div class="section" id="dataset-selection">
+
+        <div class="section-header">
+            <div class="section-icon">📚</div>
+            <div>
+                <h2>Dataset Selection & Sources</h2>
+                <p>Explanation of the datasets used and their contribution to the machine learning pipeline</p>
+            </div>
+        </div>
+
+        <div class="obj-grid">
+
+            <div class="obj-card">
+                <div class="obj-num">Dataset 01</div>
+                <h3>EVA Agricultural Records</h3>
+
+                <p>
+                    The EVA 2019–2024 dataset provides the agricultural foundation of the project,
+                    including production, cultivated area, and crop yield information by municipality and crop type.
+                </p>
+
+                <p>
+                    This information was essential for identifying productivity variations and constructing
+                    the target variable <strong>pest_alert</strong>, which represents potential pest-related anomalies.
+                </p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Dataset 02</div>
+                <h3>IDEAM Weather Stations</h3>
+
+                <p>
+                    The IDEAM weather station catalog was selected to geographically associate
+                    meteorological stations with municipalities and agricultural regions.
+                </p>
+
+                <p>
+                    This dataset improves the spatial consistency of the climate analysis and
+                    allows environmental variables to be linked correctly to crop production zones.
+                </p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Dataset 03</div>
+                <h3>Hydrometeorological Data</h3>
+
+                <p>
+                    Hydrometeorological datasets from IDEAM contain environmental variables such as
+                    temperature, precipitation, and humidity.
+                </p>
+
+                <p>
+                    These variables are critical for modeling climate conditions associated with
+                    pest emergence, propagation, and agricultural stress.
+                </p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Dataset 04</div>
+                <h3>ICA Pest Regulations</h3>
+
+                <p>
+                    Official pest regulation lists from ICA provide phytosanitary and regulatory context
+                    for the project.
+                </p>
+
+                <p>
+                    These records ensure that the analysis focuses on officially recognized pest species
+                    relevant to Colombian agricultural monitoring and control systems.
+                </p>
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="dataset-importance">
+
+        <div class="section-header">
+            <div class="section-icon">🧠</div>
+            <div>
+                <h2>Why These Datasets Were Selected</h2>
+                <p>Integration of agricultural, climate, and phytosanitary information for predictive analysis</p>
+            </div>
+        </div>
+
+        <div class="q-grid">
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <span class="icon">🌾</span>
+                    <h3>Agricultural Context</h3>
+                </div>
+
+                <ul>
+                    <li>Production and crop yield data help identify productivity anomalies potentially related to pest
+                        outbreaks.</li>
+                    <li>Municipality-level information improves regional agricultural analysis.</li>
+                </ul>
+            </div>
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <span class="icon">🌦️</span>
+                    <h3>Climate Conditions</h3>
+                </div>
+
+                <ul>
+                    <li>Temperature and precipitation are strongly associated with pest propagation and crop
+                        vulnerability.</li>
+                    <li>Climate variables improve the predictive capability of machine learning models.</li>
+                </ul>
+            </div>
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <span class="icon">🐛</span>
+                    <h3>Phytosanitary Relevance</h3>
+                </div>
+
+                <ul>
+                    <li>ICA pest records ensure that the project focuses on officially monitored species.</li>
+                    <li>This adds regulatory relevance and practical value to the prediction system.</li>
+                </ul>
+            </div>
+
+            <div class="q-panel">
+                <div class="q-panel-header">
+                    <span class="icon">⚙️</span>
+                    <h3>Integrated Analysis</h3>
+                </div>
+
+                <ul>
+                    <li>The project combines productive, environmental, and regulatory datasets into a unified
+                        analytical pipeline.</li>
+                    <li>This integration improves contextual understanding and supports more reliable pest alert
+                        predictions.</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <div class="section" id="data-sources">
+
+        <div class="section-header">
+            <div class="section-icon">🔗</div>
+            <div>
+                <h2>Open Data Sources</h2>
+                <p>Official Colombian datasets used during preprocessing and model preparation</p>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Dataset</th>
+                        <th>Source</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td><strong>EVA 2019–2024</strong></td>
+                        <td>UPRA / datos.gov.co</td>
+                        <td>Agricultural production and crop yield analysis</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>IDEAM Weather Stations</strong></td>
+                        <td>IDEAM / datos.gov.co</td>
+                        <td>Geographical association of climate stations</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>Hydrometeorological Data</strong></td>
+                        <td>IDEAM / datos.gov.co</td>
+                        <td>Climate variables for predictive analysis</td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>ICA Pest Regulations</strong></td>
+                        <td>ICA</td>
+                        <td>Official pest species validation and phytosanitary context</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
     <div class="section" id="dataset">
         <div class="section-header">
@@ -33,19 +263,22 @@
             <div class="obj-card">
                 <div class="obj-num">Dataset 01</div>
                 <h3>Initial Structure</h3>
-                <p>The dataset originally contained agricultural, climate, and phytosanitary variables related to crops and pest alerts in Colombian municipalities.</p>
+                <p>The dataset originally contained agricultural, climate, and phytosanitary variables related to crops
+                    and pest alerts in Colombian municipalities.</p>
             </div>
 
             <div class="obj-card">
                 <div class="obj-num">Dataset 02</div>
                 <h3>Rows & Columns</h3>
-                <p>After preprocessing, the dataset contained 1607 rows and 16 columns ready for machine learning training and evaluation.</p>
+                <p>After preprocessing, the dataset contained 1607 rows and 16 columns ready for machine learning
+                    training and evaluation.</p>
             </div>
 
             <div class="obj-card">
                 <div class="obj-num">Dataset 03</div>
                 <h3>Main Variables</h3>
-                <p>The dataset includes variables such as crop type, municipality, average temperature, total precipitation, pest alerts, species, and crop yield indicators.</p>
+                <p>The dataset includes variables such as crop type, municipality, average temperature, total
+                    precipitation, pest alerts, species, and crop yield indicators.</p>
             </div>
         </div>
     </div>
@@ -142,18 +375,24 @@
                     <h3>Temporal Separation</h3>
                 </div>
                 <ul>
-                    <li>The <strong>period</strong> variable was divided into two new columns: <strong>year</strong> and <strong>season</strong>.</li>
-                    <li>This transformation improves temporal interpretation and allows the model to identify seasonal climate behavior associated with pest propagation.</li>
+                    <li>The <strong>period</strong> variable was divided into two new columns: <strong>year</strong> and
+                        <strong>season</strong>.
+                    </li>
+                    <li>This transformation improves temporal interpretation and allows the model to identify seasonal
+                        climate behavior associated with pest propagation.</li>
                 </ul>
             </div>
-          
+
             <div class="q-panel">
                 <div class="q-panel-header">
                     <h3>Missing Values Handling</h3>
                 </div>
                 <ul>
-                    <li>Missing values were detected in the <strong>pest_name</strong> and <strong>species</strong> columns.</li>
-                    <li>To avoid inconsistencies during model training, empty values were replaced with the labels <strong>Pest_free</strong> and <strong>Unknown</strong>.</li>
+                    <li>Missing values were detected in the <strong>pest_name</strong> and <strong>species</strong>
+                        columns.</li>
+                    <li>To avoid inconsistencies during model training, empty values were replaced with the labels
+                        <strong>Pest_free</strong> and <strong>Unknown</strong>.
+                    </li>
                 </ul>
             </div>
 
@@ -162,8 +401,10 @@
                     <h3>Feature Engineering</h3>
                 </div>
                 <ul>
-                    <li>A new variable called <strong>climate_risk</strong> was created based on temperature and precipitation thresholds.</li>
-                    <li>If the average temperature exceeded 28°C and precipitation was greater than 100 mm, the record was classified as high climate risk.</li>
+                    <li>A new variable called <strong>climate_risk</strong> was created based on temperature and
+                        precipitation thresholds.</li>
+                    <li>If the average temperature exceeded 28°C and precipitation was greater than 100 mm, the record
+                        was classified as high climate risk.</li>
                     <li>This variable helps represent environmental conditions favorable to pest propagation.</li>
                 </ul>
             </div>
@@ -173,8 +414,11 @@
                     <h3>Data Categorization</h3>
                 </div>
                 <ul>
-                    <li>Temperature and precipitation values were grouped into <strong>low</strong>, <strong>medium</strong>, and <strong>high</strong> categories.</li>
-                    <li>This transformation simplifies climate interpretation and improves pattern detection for the machine learning model.</li>
+                    <li>Temperature and precipitation values were grouped into <strong>low</strong>,
+                        <strong>medium</strong>, and <strong>high</strong> categories.
+                    </li>
+                    <li>This transformation simplifies climate interpretation and improves pattern detection for the
+                        machine learning model.</li>
                 </ul>
             </div>
 
@@ -184,7 +428,8 @@
                 </div>
                 <ul>
                     <li>Machine learning algorithms cannot process text values directly.</li>
-                    <li>Categorical variables such as municipality, crop type, species, and pest names were transformed into numerical representations using Label Encoding.</li>
+                    <li>Categorical variables such as municipality, crop type, species, and pest names were transformed
+                        into numerical representations using Label Encoding.</li>
                 </ul>
             </div>
 
@@ -193,8 +438,10 @@
                     <h3>Normalization</h3>
                 </div>
                 <ul>
-                    <li>Numerical variables such as crop yield, relative yield, temperature, and precipitation were normalized using MinMaxScaler.</li>
-                    <li>This process scales values between 0 and 1, preventing variables with large ranges from dominating the training process.</li>
+                    <li>Numerical variables such as crop yield, relative yield, temperature, and precipitation were
+                        normalized using MinMaxScaler.</li>
+                    <li>This process scales values between 0 and 1, preventing variables with large ranges from
+                        dominating the training process.</li>
                 </ul>
             </div>
         </div>
@@ -276,19 +523,22 @@
             <div class="obj-card">
                 <div class="obj-num">Result 01</div>
                 <h3>Processed Dataset</h3>
-                <p>The preprocessing pipeline generated a structured dataset suitable for machine learning training and future predictive analysis.</p>
+                <p>The preprocessing pipeline generated a structured dataset suitable for machine learning training and
+                    future predictive analysis.</p>
             </div>
 
             <div class="obj-card">
                 <div class="obj-num">Result 02</div>
                 <h3>Improved Data Representation</h3>
-                <p>Feature engineering and categorization improved the representation of climate and agricultural conditions associated with pest outbreaks.</p>
+                <p>Feature engineering and categorization improved the representation of climate and agricultural
+                    conditions associated with pest outbreaks.</p>
             </div>
 
             <div class="obj-card">
                 <div class="obj-num">Result 03</div>
                 <h3>Model Readiness</h3>
-                <p>The final dataset was normalized, encoded, and prepared for training supervised machine learning algorithms for pest alert prediction.</p>
+                <p>The final dataset was normalized, encoded, and prepared for training supervised machine learning
+                    algorithms for pest alert prediction.</p>
             </div>
         </div>
     </div>
@@ -303,4 +553,5 @@
         </div>
     </footer>
 </body>
+
 </html>
