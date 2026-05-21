@@ -12,6 +12,9 @@ data.columns = data.columns.str.replace(';', '', regex=False)
 data['year'] = data['period'].astype(str).str[:4]
 data['season'] = data['period'].astype(str).str[-1]
 
+#Remove original colum
+data.drop(columns=['period'], inplace=True)
+
 # Handling empty variables
 
 data['pest_name'] = data['pest_name'].fillna('Pest_free')
@@ -37,7 +40,7 @@ data['category_rain'] = pd.cut(
 )
 
 labels_col = [
-    'department','municipality','crop','season', 'pest_name', 'species','category_temp',
+    'department','municipality','crop','year','season', 'pest_name', 'species','category_temp',
     'category_rain','pest_alert'
 ]
 
@@ -55,3 +58,5 @@ numeric_cols = [
 ]
 
 data[numeric_cols] = scaler.fit_transform(data[numeric_cols])
+
+data.to_csv('processed_alerts.csv', index=False)
