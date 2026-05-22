@@ -2,136 +2,444 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AgriML — Model Engineering</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriML - Model Engineering</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root{
+            --bg:#030816;
+            --bg-2:#071224;
+            --surface:#081427;
+            --surface-2:#0c1830;
+            --surface-3:#0d1d36;
+            --border:rgba(120,160,255,.12);
+            --text:#ecf2ff;
+            --muted:#94a8c6;
+            --faint:#5d7193;
+            --green:#79e08f;
+            --blue:#5da8ff;
+            --orange:#ffb14a;
+            --purple:#bb6cff;
+            --shadow:0 12px 30px rgba(0,0,0,.28);
+        }
+
+        *{box-sizing:border-box}
+        body{
+            margin:0;
+            font-family:'Inter',sans-serif;
+            background:
+                radial-gradient(circle at top center, rgba(38,107,88,.22), transparent 32%),
+                linear-gradient(180deg, #02060f 0%, #040a16 35%, #030816 100%);
+            color:var(--text);
+        }
+
+        a{text-decoration:none;color:inherit}
+        .container{width:min(1180px, calc(100% - 48px)); margin:0 auto;}
+
+        .topbar{
+            position:sticky;
+            top:0;
+            z-index:50;
+            backdrop-filter: blur(12px);
+            background:rgba(3, 8, 22, .88);
+            border-bottom:1px solid rgba(104,130,186,.12);
+        }
+
+        .hero{
+            padding:72px 0 34px;
+            border-bottom:1px solid rgba(104,130,186,.12);
+            text-align:center;
+        }
+
+        .pill{
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:8px 14px;
+            border-radius:999px;
+            border:1px solid rgba(121,224,143,.28);
+            color:var(--green);
+            background:rgba(121,224,143,.08);
+            font-size:.78rem;
+            font-weight:700;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+            margin-bottom:18px;
+        }
+
+        .hero h1{
+            margin:0 0 12px;
+            font-size:clamp(2rem, 4vw, 3.5rem);
+            line-height:1.05;
+            letter-spacing:-0.05em;
+        }
+
+        .hero p{
+            margin:0 auto;
+            color:var(--muted);
+            font-size:1.05rem;
+            line-height:1.7;
+            max-width:760px;
+        }
+
+        .hero-actions{
+            display:flex;
+            justify-content:center;
+            gap:14px;
+            margin-top:28px;
+            flex-wrap:wrap;
+        }
+
+        .btn{
+            display:inline-flex;
+            align-items:center;
+            justify-content:center;
+            gap:8px;
+            padding:14px 20px;
+            border-radius:12px;
+            font-weight:700;
+            font-size:.96rem;
+            transition:.2s ease;
+            border:1px solid transparent;
+        }
+
+        .btn-primary{
+            background:var(--green);
+            color:#08110b;
+            box-shadow:0 10px 24px rgba(121,224,143,.18);
+        }
+
+        .btn-secondary{
+            background:rgba(255,255,255,.03);
+            color:var(--text);
+            border-color:rgba(255,255,255,.08);
+        }
+
+        .stats-strip{
+            border-top:1px solid rgba(104,130,186,.08);
+            border-bottom:1px solid rgba(104,130,186,.08);
+            background:rgba(10,20,38,.78);
+        }
+
+        .stats-grid{
+            display:grid;
+            grid-template-columns:repeat(4, 1fr);
+        }
+
+        .stat-cell{
+            padding:18px 16px;
+            text-align:center;
+            border-right:1px solid rgba(104,130,186,.1);
+        }
+
+        .stat-cell:last-child{border-right:none}
+
+        .stat-value{
+            color:var(--green);
+            font-size:2rem;
+            font-weight:800;
+            line-height:1;
+            margin-bottom:8px;
+        }
+
+        .stat-label{
+            color:var(--faint);
+            font-size:.8rem;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+        }
+
+        main{padding:44px 0 80px;}
+        .section{margin-bottom:34px;}
+
+        .section-head{
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:18px;
+        }
+
+        .section-icon{
+            width:32px;
+            height:32px;
+            display:grid;
+            place-items:center;
+            border-radius:10px;
+            background:rgba(121,224,143,.12);
+            border:1px solid rgba(121,224,143,.18);
+            color:var(--green);
+            font-size:1rem;
+        }
+
+        .section-head h2{
+            margin:0;
+            font-size:1.7rem;
+            letter-spacing:-0.04em;
+        }
+
+        .section-head p{
+            margin:4px 0 0;
+            color:var(--muted);
+            font-size:.95rem;
+        }
+
+        .panel{
+            background:linear-gradient(180deg, rgba(8,20,39,.98), rgba(7,18,36,.98));
+            border:1px solid var(--border);
+            border-radius:20px;
+            padding:22px;
+            box-shadow:var(--shadow);
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            overflow:hidden;
+            border-radius:14px;
+        }
+
+        thead th{
+            text-align:left;
+            background:#0b1830;
+            color:var(--faint);
+            font-size:.76rem;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+            padding:14px 16px;
+            border-bottom:1px solid rgba(255,255,255,.06);
+        }
+
+        tbody td{
+            padding:14px 16px;
+            border-bottom:1px solid rgba(255,255,255,.05);
+            color:#e8efff;
+            font-size:.93rem;
+        }
+
+        tbody tr:hover td{
+            background:rgba(255,255,255,.02);
+        }
+
+        .success{color:var(--green); font-weight:700}
+        .muted{color:var(--muted)}
+
+        .cards{
+            display:grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap:18px;
+        }
+
+        .card{
+            background:linear-gradient(180deg, rgba(10,20,38,.96), rgba(8,20,39,.96));
+            border:1px solid var(--border);
+            border-radius:18px;
+            padding:22px;
+            box-shadow:var(--shadow);
+        }
+
+        .card .label{
+            color:var(--faint);
+            font-size:.78rem;
+            text-transform:uppercase;
+            letter-spacing:.08em;
+            margin-bottom:10px;
+        }
+
+        .card h3{
+            margin:0 0 10px;
+            font-size:1.25rem;
+        }
+
+        .card p{
+            margin:0;
+            color:var(--muted);
+            line-height:1.7;
+            font-size:.95rem;
+        }
+
+        .error-box{
+            margin-top:14px;
+            padding:12px 14px;
+            border-radius:12px;
+            background:rgba(255, 177, 74, 0.08);
+            border:1px solid rgba(255, 177, 74, 0.18);
+            color:#ffd08a;
+            font-size:.9rem;
+        }
+
+        footer{
+            border-top:1px solid rgba(104,130,186,.12);
+            padding:18px 0 26px;
+            color:var(--faint);
+            font-size:.85rem;
+        }
+
+        @media (max-width: 1000px){
+            .stats-grid,.cards{grid-template-columns:repeat(2,1fr);}
+        }
+
+        @media (max-width: 700px){
+            .container{width:min(100% - 24px, 1180px);}
+            .stats-grid,.cards{grid-template-columns:1fr;}
+            .hero{padding:42px 0 26px;}
+            .hero h1{font-size:2rem;}
+        }
+    </style>
 </head>
 <body>
 
-{% include 'navbar.html' %}
-
-<div class="hero">
-    <div class="hero-tag">Model Engineering</div>
-    <h1>🔧 Comparative Model Analysis</h1>
-    <p>Overview of the machine learning models evaluated on processed_alerts.csv.</p>
-    <div class="hero-actions">
-        <a href="/models/development/logistic-regression" class="btn-primary">View Logistic Regression</a>
-    </div>
-</div>
-
-<div class="stats-bar">
-    <div class="stat-item">
-        <div class="stat-value">{{ models|length }}</div>
-        <div class="stat-label">Models Evaluated</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-value">
-            {% set best = models | sort(attribute='cv_mean', reverse=true) | first %}
-            {{ (best.cv_mean * 100)|round(2) if best else 0 }}%
+    <header class="topbar">
+        <div class="container">
+            {% include 'navbar.html' %}
         </div>
-        <div class="stat-label">Best CV Mean</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-value">
-            {% if models %}
-                {{ models | map(attribute='train_size') | sum }}
-            {% else %}
-                0
-            {% endif %}
-        </div>
-        <div class="stat-label">Total Train Samples</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-value">
-            {% if models %}
-                {{ models | map(attribute='test_size') | sum }}
-            {% else %}
-                0
-            {% endif %}
-        </div>
-        <div class="stat-label">Total Test Samples</div>
-    </div>
-</div>
+    </header>
 
-<div class="section">
-    <div class="section-header">
-        <div class="section-icon">📊</div>
-        <div>
-            <h2>Model Comparison</h2>
-            <p>Key metrics for each model in the current pipeline.</p>
-        </div>
-    </div>
+    {% set model_count = results|length %}
+    {% set total_train = results | sum(attribute='train_size') %}
+    {% set total_test = results | sum(attribute='test_size') %}
+    {% if model_count > 0 %}
+        {% set best_cv = results | map(attribute='cv_mean') | max %}
+    {% else %}
+        {% set best_cv = 0 %}
+    {% endif %}
 
-    <div class="table-wrap">
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Model</th>
-                    <th>Train</th>
-                    <th>Test</th>
-                    <th>CV Mean</th>
-                    <th>CV Std</th>
-                    <th>Best Metric</th>
-                    <th>Open</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for model in models %}
-                <tr>
-                    <td><strong>{{ model.icon }} {{ model.name }}</strong></td>
-                    <td>{{ model.train_size }}</td>
-                    <td>{{ model.test_size }}</td>
-                    <td>{{ (model.cv_mean * 100)|round(2) }}%</td>
-                    <td>± {{ (model.cv_std * 100)|round(2) }}%</td>
-                    <td>
-                        {% if model.accuracy is defined %}
-                            Accuracy {{ (model.accuracy * 100)|round(2) }}%
+    <section class="hero">
+        <div class="container">
+            <div class="pill">Model Engineering</div>
+            <h1>🔧 Comparative Model Analysis</h1>
+            <p>
+                Overview of the machine learning models evaluated on
+                <strong>processed_alerts.csv</strong>.
+            </p>
+
+            <div class="hero-actions">
+                <a href="/models/development/logistic-regression" class="btn btn-primary">View Logistic Regression</a>
+                <a href="/models/evaluation/logistic-regression" class="btn btn-secondary">Open Evaluation Dashboard</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="stats-strip">
+        <div class="container stats-grid">
+            <div class="stat-cell">
+                <div class="stat-value">{{ model_count }}</div>
+                <div class="stat-label">Models evaluated</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-value">{{ (best_cv * 100)|round(2) }}%</div>
+                <div class="stat-label">Best CV mean</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-value">{{ total_train }}</div>
+                <div class="stat-label">Total train samples</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-value">{{ total_test }}</div>
+                <div class="stat-label">Total test samples</div>
+            </div>
+        </div>
+    </section>
+
+    <main class="container">
+        <section class="section">
+            <div class="section-head">
+                <div class="section-icon">📊</div>
+                <div>
+                    <h2>Model Comparison</h2>
+                    <p>Key metrics for each model currently available in the pipeline.</p>
+                </div>
+            </div>
+
+            <div class="panel">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Train</th>
+                            <th>Test</th>
+                            <th>CV Mean</th>
+                            <th>CV Std</th>
+                            <th>Best Metric</th>
+                            <th>Open</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for model in results %}
+                        <tr>
+                            <td>{{ model.icon }} {{ model.name }}</td>
+                            <td>{{ model.train_size }}</td>
+                            <td>{{ model.test_size }}</td>
+                            <td class="success">{{ model.cv_mean }}</td>
+                            <td>{{ model.cv_std }}</td>
+                            <td>
+                                {% if model.f1_score is defined %}
+                                    F1 = {{ model.f1_score }}
+                                {% else %}
+                                    <span class="muted">Not available</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a class="success" href="/models/development/logistic-regression">Open</a>
+                            </td>
+                        </tr>
+                        {% if model.error %}
+                        <tr>
+                            <td colspan="7">
+                                <div class="error-box">
+                                    <strong>Model warning:</strong> {{ model.error }}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endif %}
                         {% else %}
-                            F1 Weighted
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if model.slug == 'logistic-regression' %}
-                            <a href="/models/development/logistic-regression" class="btn-primary" style="padding:6px 14px;">View</a>
-                        {% elif model.slug == 'random-forest' %}
-                            <a href="/models/development/random-forest" class="btn-primary" style="padding:6px 14px;">View</a>
-                        {% elif model.slug == 'gradient-boosting' %}
-                            <a href="/models/development/gradient-boosting" class="btn-primary" style="padding:6px 14px;">View</a>
-                        {% endif %}
-                    </td>
-                </tr>
+                        <tr>
+                            <td colspan="7" class="muted">No model results available.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-head">
+                <div class="section-icon">🧾</div>
+                <div>
+                    <h2>Summary Cards</h2>
+                    <p>Quick explanation of each available model.</p>
+                </div>
+            </div>
+
+            <div class="cards">
+                {% for model in results %}
+                <article class="card">
+                    <div class="label">{{ model.slug }}</div>
+                    <h3>{{ model.icon }} {{ model.name }}</h3>
+                    <p>{{ model.description }}</p>
+
+                    {% if model.error %}
+                    <div class="error-box" style="margin-top:16px;">
+                        {{ model.error }}
+                    </div>
+                    {% endif %}
+                </article>
+                {% else %}
+                <article class="card">
+                    <div class="label">no-data</div>
+                    <h3>No models loaded</h3>
+                    <p>The application did not receive any model outputs from the backend.</p>
+                </article>
                 {% endfor %}
-            </tbody>
-        </table>
-    </div>
-</div>
+            </div>
+        </section>
+    </main>
 
-<div class="section">
-    <div class="section-header">
-        <div class="section-icon">🧠</div>
-        <div>
-            <h2>Summary Cards</h2>
-            <p>Quick explanation of each model.</p>
+    <footer>
+        <div class="container">
+            AgriML — Agricultural Pest Prediction · Colombia
         </div>
-    </div>
-
-    <div class="cards-grid">
-        {% for model in models %}
-        <div class="menu-card">
-            <div class="card-icon">{{ model.icon }}</div>
-            <h3>{{ model.name }}</h3>
-            <p>{{ model.description }}</p>
-            <span class="card-arrow">CV Mean: {{ (model.cv_mean * 100)|round(2) }}%</span>
-        </div>
-        {% endfor %}
-    </div>
-</div>
-
-<footer>
-    <p>AgriML — Agricultural Pest Prediction · Colombia</p>
-    <div class="footer-stack">
-        <span>Python</span><span>Flask</span><span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
-    </div>
-</footer>
+    </footer>
 
 </body>
 </html>
