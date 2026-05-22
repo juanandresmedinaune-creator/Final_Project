@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import pandas as pd
-import models
+import logisticRegression
 
 app = Flask(__name__)
 
@@ -31,56 +31,11 @@ def pests_data():
 def pests_data_evaluation():
     return render_template('dataEvaluation.html')
 
-@app.route('/models/engineering')
+@app.route('/pests/modelEngineering')
 def model_engineering():
-    results = models.run_all_models()
-    return render_template('modelEngineering.html', results=results)
+    results = logisticRegression.run_all_models()
+    predictions = pd.read_csv("predictions.csv")
+    return render_template('modelEngineering.html', results=results, predictions=predictions.to_dict(orient='records'))
 
-@app.route('/models/development/logistic-regression')
-def model_lr():
-    result = models.run_logistic_regression()
-    print("LOGISTIC RESULT ERROR:", result.get("error"))
-    return render_template('modelDevelopment.html', model=result, active='lr')
-
-@app.route('/models/development/random-forest')
-def model_rf():
-    result = {
-        "name": "Random Forest",
-        "icon": "🌲",
-        "description": "This model has not been integrated yet.",
-        "error": "run_random_forest() is not available in models.py yet.",
-        "train_size": 0,
-        "test_size": 0,
-        "accuracy": 0,
-        "cv_std": 0,
-        "show_metrics": False
-    }
-    return render_template('modelDevelopment.html', model=result, active='rf')
-
-@app.route('/models/development/gradient-boosting')
-def model_gb():
-    result = {
-        "name": "Gradient Boosting",
-        "icon": "🚀",
-        "description": "This model has not been integrated yet.",
-        "error": "run_gradient_boosting() is not available in models.py yet.",
-        "train_size": 0,
-        "test_size": 0,
-        "accuracy": 0,
-        "cv_std": 0,
-        "show_metrics": False
-    }
-    return render_template('modelDevelopment.html', model=result, active='gb')
-
-@app.route('/models/evaluation/logistic-regression')
-def model_lr_evaluation():
-    result = models.run_logistic_regression()
-    print("LOGISTIC RESULT ERROR:", result.get("error"))
-    return render_template('modelEvaluation.html', model=result)
-
-
-# =========================
-# APP
-# =========================
 if __name__ == '__main__':
     app.run(debug=True)

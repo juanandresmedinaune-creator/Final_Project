@@ -4,290 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AgriML - Model Engineering</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <style>
-        :root{
-            --bg:#030816;
-            --bg-2:#071224;
-            --surface:#081427;
-            --surface-2:#0c1830;
-            --surface-3:#0d1d36;
-            --border:rgba(120,160,255,.12);
-            --text:#ecf2ff;
-            --muted:#94a8c6;
-            --faint:#5d7193;
-            --green:#79e08f;
-            --blue:#5da8ff;
-            --orange:#ffb14a;
-            --purple:#bb6cff;
-            --shadow:0 12px 30px rgba(0,0,0,.28);
-        }
-
-        *{box-sizing:border-box}
-        body{
-            margin:0;
-            font-family:'Inter',sans-serif;
-            background:
-                radial-gradient(circle at top center, rgba(38,107,88,.22), transparent 32%),
-                linear-gradient(180deg, #02060f 0%, #040a16 35%, #030816 100%);
-            color:var(--text);
-        }
-
-        a{text-decoration:none;color:inherit}
-        .container{width:min(1180px, calc(100% - 48px)); margin:0 auto;}
-
-        .topbar{
-            position:sticky;
-            top:0;
-            z-index:50;
-            backdrop-filter: blur(12px);
-            background:rgba(3, 8, 22, .88);
-            border-bottom:1px solid rgba(104,130,186,.12);
-        }
-
-        .hero{
-            padding:72px 0 34px;
-            border-bottom:1px solid rgba(104,130,186,.12);
-            text-align:center;
-        }
-
-        .pill{
-            display:inline-flex;
-            align-items:center;
-            gap:8px;
-            padding:8px 14px;
-            border-radius:999px;
-            border:1px solid rgba(121,224,143,.28);
-            color:var(--green);
-            background:rgba(121,224,143,.08);
-            font-size:.78rem;
-            font-weight:700;
-            text-transform:uppercase;
-            letter-spacing:.08em;
-            margin-bottom:18px;
-        }
-
-        .hero h1{
-            margin:0 0 12px;
-            font-size:clamp(2rem, 4vw, 3.5rem);
-            line-height:1.05;
-            letter-spacing:-0.05em;
-        }
-
-        .hero p{
-            margin:0 auto;
-            color:var(--muted);
-            font-size:1.05rem;
-            line-height:1.7;
-            max-width:760px;
-        }
-
-        .hero-actions{
-            display:flex;
-            justify-content:center;
-            gap:14px;
-            margin-top:28px;
-            flex-wrap:wrap;
-        }
-
-        .btn{
-            display:inline-flex;
-            align-items:center;
-            justify-content:center;
-            gap:8px;
-            padding:14px 20px;
-            border-radius:12px;
-            font-weight:700;
-            font-size:.96rem;
-            transition:.2s ease;
-            border:1px solid transparent;
-        }
-
-        .btn-primary{
-            background:var(--green);
-            color:#08110b;
-            box-shadow:0 10px 24px rgba(121,224,143,.18);
-        }
-
-        .btn-secondary{
-            background:rgba(255,255,255,.03);
-            color:var(--text);
-            border-color:rgba(255,255,255,.08);
-        }
-
-        .stats-strip{
-            border-top:1px solid rgba(104,130,186,.08);
-            border-bottom:1px solid rgba(104,130,186,.08);
-            background:rgba(10,20,38,.78);
-        }
-
-        .stats-grid{
-            display:grid;
-            grid-template-columns:repeat(4, 1fr);
-        }
-
-        .stat-cell{
-            padding:18px 16px;
-            text-align:center;
-            border-right:1px solid rgba(104,130,186,.1);
-        }
-
-        .stat-cell:last-child{border-right:none}
-
-        .stat-value{
-            color:var(--green);
-            font-size:2rem;
-            font-weight:800;
-            line-height:1;
-            margin-bottom:8px;
-        }
-
-        .stat-label{
-            color:var(--faint);
-            font-size:.8rem;
-            text-transform:uppercase;
-            letter-spacing:.08em;
-        }
-
-        main{padding:44px 0 80px;}
-        .section{margin-bottom:34px;}
-
-        .section-head{
-            display:flex;
-            align-items:center;
-            gap:12px;
-            margin-bottom:18px;
-        }
-
-        .section-icon{
-            width:32px;
-            height:32px;
-            display:grid;
-            place-items:center;
-            border-radius:10px;
-            background:rgba(121,224,143,.12);
-            border:1px solid rgba(121,224,143,.18);
-            color:var(--green);
-            font-size:1rem;
-        }
-
-        .section-head h2{
-            margin:0;
-            font-size:1.7rem;
-            letter-spacing:-0.04em;
-        }
-
-        .section-head p{
-            margin:4px 0 0;
-            color:var(--muted);
-            font-size:.95rem;
-        }
-
-        .panel{
-            background:linear-gradient(180deg, rgba(8,20,39,.98), rgba(7,18,36,.98));
-            border:1px solid var(--border);
-            border-radius:20px;
-            padding:22px;
-            box-shadow:var(--shadow);
-        }
-
-        table{
-            width:100%;
-            border-collapse:collapse;
-            overflow:hidden;
-            border-radius:14px;
-        }
-
-        thead th{
-            text-align:left;
-            background:#0b1830;
-            color:var(--faint);
-            font-size:.76rem;
-            text-transform:uppercase;
-            letter-spacing:.08em;
-            padding:14px 16px;
-            border-bottom:1px solid rgba(255,255,255,.06);
-        }
-
-        tbody td{
-            padding:14px 16px;
-            border-bottom:1px solid rgba(255,255,255,.05);
-            color:#e8efff;
-            font-size:.93rem;
-        }
-
-        tbody tr:hover td{
-            background:rgba(255,255,255,.02);
-        }
-
-        .success{color:var(--green); font-weight:700}
-        .muted{color:var(--muted)}
-
-        .cards{
-            display:grid;
-            grid-template-columns:repeat(3, 1fr);
-            gap:18px;
-        }
-
-        .card{
-            background:linear-gradient(180deg, rgba(10,20,38,.96), rgba(8,20,39,.96));
-            border:1px solid var(--border);
-            border-radius:18px;
-            padding:22px;
-            box-shadow:var(--shadow);
-        }
-
-        .card .label{
-            color:var(--faint);
-            font-size:.78rem;
-            text-transform:uppercase;
-            letter-spacing:.08em;
-            margin-bottom:10px;
-        }
-
-        .card h3{
-            margin:0 0 10px;
-            font-size:1.25rem;
-        }
-
-        .card p{
-            margin:0;
-            color:var(--muted);
-            line-height:1.7;
-            font-size:.95rem;
-        }
-
-        .error-box{
-            margin-top:14px;
-            padding:12px 14px;
-            border-radius:12px;
-            background:rgba(255, 177, 74, 0.08);
-            border:1px solid rgba(255, 177, 74, 0.18);
-            color:#ffd08a;
-            font-size:.9rem;
-        }
-
-        footer{
-            border-top:1px solid rgba(104,130,186,.12);
-            padding:18px 0 26px;
-            color:var(--faint);
-            font-size:.85rem;
-        }
-
-        @media (max-width: 1000px){
-            .stats-grid,.cards{grid-template-columns:repeat(2,1fr);}
-        }
-
-        @media (max-width: 700px){
-            .container{width:min(100% - 24px, 1180px);}
-            .stats-grid,.cards{grid-template-columns:1fr;}
-            .hero{padding:42px 0 26px;}
-            .hero h1{font-size:2rem;}
-        }
-    </style>
-    <title>Model Engineering</title>
+    <title>AgriML — Model Engineering</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
 
@@ -297,206 +15,59 @@
 
 <body>
 
-    <header class="topbar">
-        <div class="container">
-            {% include 'navbar.html' %}
-        </div>
-    </header>
-
-    {% set model_count = results|length %}
-    {% set total_train = results | sum(attribute='train_size') %}
-    {% set total_test = results | sum(attribute='test_size') %}
-    {% if model_count > 0 %}
-        {% set best_cv = results | map(attribute='cv_mean') | max %}
-    {% else %}
-        {% set best_cv = 0 %}
-    {% endif %}
-
-    <section class="hero">
-        <div class="container">
-            <div class="pill">Model Engineering</div>
-            <h1>🔧 Comparative Model Analysis</h1>
-            <p>
-                Overview of the machine learning models evaluated on
-                <strong>processed_alerts.csv</strong>.
-            </p>
-
-            <div class="hero-actions">
-                <a href="/models/development/logistic-regression" class="btn btn-primary">View Logistic Regression</a>
-                <a href="/models/evaluation/logistic-regression" class="btn btn-secondary">Open Evaluation Dashboard</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="stats-strip">
-        <div class="container stats-grid">
-            <div class="stat-cell">
-                <div class="stat-value">{{ model_count }}</div>
-                <div class="stat-label">Models evaluated</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-value">{{ (best_cv * 100)|round(2) }}%</div>
-                <div class="stat-label">Best CV mean</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-value">{{ total_train }}</div>
-                <div class="stat-label">Total train samples</div>
-            </div>
-            <div class="stat-cell">
-                <div class="stat-value">{{ total_test }}</div>
-                <div class="stat-label">Total test samples</div>
-            </div>
-        </div>
-    </section>
-
-    <main class="container">
-        <section class="section">
-            <div class="section-head">
-                <div class="section-icon">📊</div>
-                <div>
-                    <h2>Model Comparison</h2>
-                    <p>Key metrics for each model currently available in the pipeline.</p>
-                </div>
-            </div>
-
-            <div class="panel">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Model</th>
-                            <th>Train</th>
-                            <th>Test</th>
-                            <th>CV Mean</th>
-                            <th>CV Std</th>
-                            <th>Best Metric</th>
-                            <th>Open</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for model in results %}
-                        <tr>
-                            <td>{{ model.icon }} {{ model.name }}</td>
-                            <td>{{ model.train_size }}</td>
-                            <td>{{ model.test_size }}</td>
-                            <td class="success">{{ model.cv_mean }}</td>
-                            <td>{{ model.cv_std }}</td>
-                            <td>
-                                {% if model.f1_score is defined %}
-                                    F1 = {{ model.f1_score }}
-                                {% else %}
-                                    <span class="muted">Not available</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <a class="success" href="/models/development/logistic-regression">Open</a>
-                            </td>
-                        </tr>
-                        {% if model.error %}
-                        <tr>
-                            <td colspan="7">
-                                <div class="error-box">
-                                    <strong>Model warning:</strong> {{ model.error }}
-                                </div>
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% else %}
-                        <tr>
-                            <td colspan="7" class="muted">No model results available.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="section-head">
-                <div class="section-icon">🧾</div>
-                <div>
-                    <h2>Summary Cards</h2>
-                    <p>Quick explanation of each available model.</p>
-                </div>
-            </div>
-
-            <div class="cards">
-                {% for model in results %}
-                <article class="card">
-                    <div class="label">{{ model.slug }}</div>
-                    <h3>{{ model.icon }} {{ model.name }}</h3>
-                    <p>{{ model.description }}</p>
-
-                    {% if model.error %}
-                    <div class="error-box" style="margin-top:16px;">
-                        {{ model.error }}
-                    </div>
-                    {% endif %}
-                </article>
-                {% else %}
-                <article class="card">
-                    <div class="label">no-data</div>
-                    <h3>No models loaded</h3>
-                    <p>The application did not receive any model outputs from the backend.</p>
-                </article>
-                {% endfor %}
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <div class="container">
-            AgriML — Agricultural Pest Prediction · Colombia
-        </div>
     {% include 'navbar.html' %}
-
-    <!-- ================================= -->
-    <!-- HERO -->
-    <!-- ================================= -->
 
     <section class="hero">
 
         <div class="hero-tag">
-            Model Training
+            Machine Learning
         </div>
 
         <h1>
-            Training &
+            Model Engineering
             <br>
-            <em>Prediction Pipeline</em>
+            <em>Training & Evaluation</em>
         </h1>
 
         <p>
-            Training, validation, and prediction processes applied to multiple
-            machine learning models for agricultural pest alert prediction.
+            Development, training, validation, and comparison of multiple
+            machine learning models for agricultural pest alert prediction
+            in Colombian crops.
         </p>
 
         <div class="hero-actions">
 
-            <a href="#models" class="btn-primary">
-                Models
+            <a href="#random-forest" class="btn-primary">
+                Random Forest
             </a>
 
-            <a href="#training" class="btn-primary">
-                Training Process
-            </a>
-
-            <a href="#predictions" class="btn-outline">
-                Predictions
-            </a>
-
-            <a href="#decision-tree" class="btn-outline">
+            <a href="#decision-tree" class="btn-primary">
                 Decision Tree
+            </a>
+
+            <a href="#logistic-regression" class="btn-outline">
+                Logistic Regression
+            </a>
+
+            <a href="#comparison" class="btn-outline">
+                Comparison
             </a>
 
         </div>
 
     </section>
 
-    <!-- ================================= -->
-    <!-- STATS -->
-    <!-- ================================= -->
-
     <div class="stats-bar">
+
+        <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">ML Models</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-value">1607</div>
+            <div class="stat-label">Dataset Rows</div>
+        </div>
 
         <div class="stat-item">
             <div class="stat-value">80%</div>
@@ -508,197 +79,124 @@
             <div class="stat-label">Testing Data</div>
         </div>
 
-        <div class="stat-item">
-            <div class="stat-value">3</div>
-            <div class="stat-label">ML Models</div>
-        </div>
-
-        <div class="stat-item">
-            <div class="stat-value">1607</div>
-            <div class="stat-label">Rows</div>
-        </div>
-
     </div>
 
     <hr class="divider">
 
-    <!-- ================================= -->
-    <!-- MODELS -->
-    <!-- ================================= -->
-
-    <div class="section" id="models">
+    <section class="section" id="random-forest">
 
         <div class="section-header">
 
-            <div class="section-icon">🧠</div>
+            <div class="section-icon">
+                🌲
+            </div>
 
             <div>
-                <h2>Machine Learning Models</h2>
-                <p>Models implemented for pest alert prediction</p>
+                <h2>Random Forest Model</h2>
+
+                <p>
+                    Ensemble learning model used for pest alert prediction
+                    using climate and agricultural variables.
+                </p>
             </div>
 
         </div>
+
+        <!-- CARDS -->
 
         <div class="obj-grid">
 
-            <!-- RANDOM FOREST -->
+            <div class="obj-card">
+
+                <div class="obj-num">
+                    Step 01
+                </div>
+
+                <h3>Dataset Splitting</h3>
+
+                <p>
+                    The dataset was divided into training and testing subsets
+                    using an 80/20 ratio.
+                </p>
+
+            </div>
 
             <div class="obj-card">
 
-                <div class="obj-num">Model 01</div>
+                <div class="obj-num">
+                    Step 02
+                </div>
 
-                <h3>Random Forest</h3>
+                <h3>Training Process</h3>
 
                 <p>
-                    Random Forest combines multiple decision trees to improve
-                    prediction stability and reduce overfitting.
+                    The Random Forest model was trained using agricultural,
+                    climate, and pest-related variables.
                 </p>
 
-                <ul>
-                    <li>Handles numerical and categorical data efficiently.</li>
-                    <li>Suitable for tabular agricultural datasets.</li>
-                    <li>Provides feature importance analysis.</li>
-                </ul>
-
             </div>
-
-            <!-- DECISION TREE -->
 
             <div class="obj-card">
 
-                <div class="obj-num">Model 02</div>
+                <div class="obj-num">
+                    Step 03
+                </div>
 
-                <h3>Decision Tree</h3>
+                <h3>Hyperparameters</h3>
 
                 <p>
-                    A supervised machine learning model that uses a flowchart-like
-                    structure to make predictions.
+                    The model was configured using multiple decision trees,
+                    max_depth=10, and random_state=42.
                 </p>
 
-                <ul>
-                    <li>Easy to interpret and visualize.</li>
-                    <li>Handles non-linear relationships.</li>
-                    <li>Works well for classification tasks.</li>
-                </ul>
-
             </div>
 
         </div>
 
-    </div>
+        <br>
 
-    <hr class="divider">
+        <!-- PREDICTIONS -->
 
-    <!-- ================================= -->
-    <!-- TRAINING -->
-    <!-- ================================= -->
-
-    <div class="section" id="training">
-
-        <div class="section-header">
-
-            <div>
-                <h2>Training Pipeline</h2>
-                <p>Main stages of the machine learning workflow</p>
-            </div>
-
-        </div>
-
-        <div class="q-grid">
-
-            <div class="q-panel">
-
-                <div class="q-panel-header">
-                    <h3>Dataset Split</h3>
-                </div>
-
-                <ul>
-                    <li>The dataset was divided into training and testing subsets.</li>
-                    <li>An 80/20 ratio was used for model development and validation.</li>
-                </ul>
-
-            </div>
-
-            <div class="q-panel">
-
-                <div class="q-panel-header">
-                    <h3>Training Process</h3>
-                </div>
-
-                <ul>
-                    <li>The model learned patterns from agricultural and climate variables.</li>
-                    <li>Training was performed using supervised learning techniques.</li>
-                </ul>
-
-            </div>
-
-            <div class="q-panel">
-
-                <div class="q-panel-header">
-                    <h3>Hyperparameters</h3>
-                </div>
-
-                <ul>
-                    <li>Random Forest configured using multiple trees.</li>
-                    <li>Decision Tree configured with max_depth=5.</li>
-                </ul>
-
-            </div>
-
-            <div class="q-panel">
-
-                <div class="q-panel-header">
-                    <h3>Validation</h3>
-                </div>
-
-                <ul>
-                    <li>The testing subset was used to evaluate prediction behavior.</li>
-                    <li>Predictions were compared against real dataset values.</li>
-                </ul>
-
-            </div>
-
-        </div>
-
-    </div>
-
-    <hr class="divider">
-
-    <!-- ================================= -->
-    <!-- RANDOM FOREST PREDICTIONS -->
-    <!-- ================================= -->
-
-    <div class="section" id="predictions">
-
-        <div class="section-header">
-
-            <div>
-                <h2>Random Forest Predictions</h2>
-                <p>Examples generated by the trained machine learning model</p>
-            </div>
-
-        </div>
-
-        <div class="table-wrap prediction-table">
+        <div class="table-wrap">
 
             <table class="data-table compact-table">
 
                 <thead>
+
                     <tr>
                         <th>Real Value</th>
                         <th>Predicted Value</th>
                         <th>Status</th>
                     </tr>
+
                 </thead>
 
                 <tbody>
 
-                    {% for row in predictions %}
+                    {% for row in random_forest_predictions %}
 
                     <tr>
-                        <td>{{ row.real_value }}</td>
-                        <td>{{ row.predicted_value }}</td>
-                        <td>{{ row.status }}</td>
+
+                        <td>
+                            {{ row.real_value }}
+                        </td>
+
+                        <td>
+                            {{ row.predicted_value }}
+                        </td>
+
+                        <td class="
+                            {% if row.status == 'Correct Prediction' %}
+                                correct
+                            {% else %}
+                                error
+                            {% endif %}
+                        ">
+
+                            {{ row.status }}
+
+                        </td>
+
                     </tr>
 
                     {% endfor %}
@@ -709,7 +207,34 @@
 
         </div>
 
-    </div>
+        <br>
+
+        <!-- GRAPH -->
+
+        <div class="graph-card">
+
+            <div class="section-header">
+
+                <div>
+                    <h2>Feature Importance</h2>
+
+                    <p>
+                        Variables with the highest influence on Random Forest predictions
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="chart-container">
+
+                <img src="{{ url_for('static', filename='feature_importance.png') }}"
+                    alt="Feature Importance Graph">
+
+            </div>
+
+        </div>
+
+    </section>
 
     <hr class="divider">
 
@@ -722,31 +247,65 @@
         <div class="section-header">
 
             <div class="section-icon">
-                <i class="bi bi-diagram-3"></i>
+                🌳
             </div>
 
             <div>
-                <h2>Decision Tree Development</h2>
-                <p>Detailed implementation and prediction examples.</p>
+                <h2>Decision Tree Model</h2>
+
+                <p>
+                    Supervised learning model based on hierarchical
+                    decision rules for pest classification.
+                </p>
             </div>
 
         </div>
 
-        <div class="q-grid">
+        <div class="obj-grid">
 
-            <div class="q-panel">
-                <h3>1. Dataset Splitting</h3>
-                <p>The dataset was divided using an 80/20 train-test split strategy.</p>
+            <div class="obj-card">
+
+                <div class="obj-num">
+                    Step 01
+                </div>
+
+                <h3>Dataset Splitting</h3>
+
+                <p>
+                    The same processed dataset was divided into
+                    training and testing subsets.
+                </p>
+
             </div>
 
-            <div class="q-panel">
-                <h3>2. Hyperparameter Configuration</h3>
-                <p>Using Gini Impurity criterion and max_depth=5.</p>
+            <div class="obj-card">
+
+                <div class="obj-num">
+                    Step 02
+                </div>
+
+                <h3>Training Process</h3>
+
+                <p>
+                    The model learned decision rules based on
+                    climate and crop behavior.
+                </p>
+
             </div>
 
-            <div class="q-panel">
-                <h3>3. Feature Preprocessing</h3>
-                <p>The model handles non-linear relationships without feature scaling.</p>
+            <div class="obj-card">
+
+                <div class="obj-num">
+                    Step 03
+                </div>
+
+                <h3>Hyperparameters</h3>
+
+                <p>
+                    The model was configured using
+                    max_depth=5 and Gini criterion.
+                </p>
+
             </div>
 
         </div>
@@ -755,14 +314,16 @@
 
         <div class="table-wrap">
 
-            <table class="data-table">
+            <table class="data-table compact-table">
 
                 <thead>
+
                     <tr>
-                        <th>Actual Alert</th>
-                        <th>Predicted Alert</th>
+                        <th>Real Value</th>
+                        <th>Predicted Value</th>
                         <th>Status</th>
                     </tr>
+
                 </thead>
 
                 <tbody>
@@ -771,21 +332,23 @@
 
                     <tr>
 
-                        <td>{{ row.real_value }}</td>
-
-                        <td>{{ row.predicted_value }}</td>
+                        <td>
+                            {{ row.real_value }}
+                        </td>
 
                         <td>
+                            {{ row.predicted_value }}
+                        </td>
 
-                            {% if row.status == 'Correct' %}
-                                <span class="badge badge-green">
-                                    Correct
-                                </span>
+                        <td class="
+                            {% if row.status == 'Correct Prediction' %}
+                                correct
                             {% else %}
-                                <span class="badge badge-amber">
-                                    Error
-                                </span>
+                                error
                             {% endif %}
+                        ">
+
+                            {{ row.status }}
 
                         </td>
 
@@ -804,29 +367,200 @@
     <hr class="divider">
 
     <!-- ================================= -->
-    <!-- FEATURE IMPORTANCE -->
+    <!-- LOGISTIC REGRESSION -->
     <!-- ================================= -->
 
-    <div class="section" id="visualization">
+    <section class="section" id="logistic-regression">
 
         <div class="section-header">
 
+            <div class="section-icon">
+                📈
+            </div>
+
             <div>
-                <h2>Feature Importance</h2>
-                <p>Visualization of the most influential variables in Random Forest</p>
+                <h2>Logistic Regression Model</h2>
+
+                <p>
+                    Linear classification algorithm used to estimate
+                    pest alert probabilities.
+                </p>
             </div>
 
         </div>
 
-        <div style="text-align:center;">
+        <div class="obj-grid">
 
-            <img
-                src="{{ url_for('static', filename='feature_importance.png') }}"
-                style="max-width:900px; width:100%; border-radius:20px;">
+            <div class="obj-card">
+
+                <div class="obj-num">
+                    Step 01
+                </div>
+
+                <h3>Dataset Splitting</h3>
+
+                <p>
+                    The processed dataset was separated into
+                    training and testing subsets.
+                </p>
+
+            </div>
+
+            <div class="obj-card">
+
+                <div class="obj-num">
+                    Step 02
+                </div>
+
+                <h3>Training Process</h3>
+
+                <p>
+                    Logistic Regression analyzed relationships
+                    between climate variables and pest alerts.
+                </p>
+
+            </div>
+
+            <div class="obj-card">
+
+                <div class="obj-num">
+                    Step 03
+                </div>
+
+                <h3>Hyperparameters</h3>
+
+                <p>
+                    The model can be configured using
+                    regularization and solver optimization.
+                </p>
+
+            </div>
 
         </div>
 
-    </div>
+        <br>
+
+        <div class="table-wrap">
+
+            <table class="data-table compact-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Real Value</th>
+                        <th>Predicted Value</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {% for row in logistic_predictions %}
+
+                    <tr>
+
+                        <td>
+                            {{ row.real_value }}
+                        </td>
+
+                        <td>
+                            {{ row.predicted_value }}
+                        </td>
+
+                        <td class="
+                            {% if row.status == 'Correct Prediction' %}
+                                correct
+                            {% else %}
+                                error
+                            {% endif %}
+                        ">
+
+                            {{ row.status }}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <hr class="divider">
+
+    <!-- ================================= -->
+    <!-- MODEL COMPARISON -->
+    <!-- ================================= -->
+
+    <section class="section" id="comparison">
+
+        <div class="section-header">
+
+            <div class="section-icon">
+                📊
+            </div>
+
+            <div>
+                <h2>Model Comparison</h2>
+
+                <p>
+                    Comparative analysis between machine learning models
+                </p>
+            </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Model</th>
+                        <th>Strength</th>
+                        <th>Advantage</th>
+                        <th>Status</th>
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>Random Forest</td>
+                        <td>High prediction stability</td>
+                        <td>Feature importance analysis</td>
+                        <td>Implemented</td>
+                    </tr>
+
+                    <tr>
+                        <td>Decision Tree</td>
+                        <td>Easy interpretation</td>
+                        <td>Visual decision rules</td>
+                        <td>Implemented</td>
+                    </tr>
+
+                    <tr>
+                        <td>Logistic Regression</td>
+                        <td>Fast classification</td>
+                        <td>Probability estimation</td>
+                        <td>Pending Evaluation</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
 
     <!-- ================================= -->
     <!-- FOOTER -->
@@ -834,13 +568,17 @@
 
     <footer>
 
-        <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+        <p>
+            AgriML — Agricultural Pest Prediction · Colombia
+        </p>
 
         <div class="footer-stack">
+
             <span>Python</span>
+            <span>Flask</span>
             <span>Pandas</span>
             <span>Scikit-learn</span>
-            <span>Flask</span>
+
         </div>
 
     </footer>
