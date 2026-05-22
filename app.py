@@ -29,5 +29,9 @@ def decision_tree_development():
 def view_metrics():
     return render_template('metrics.html')
 
+@app.route('/models/prediction/random-forest')
+def view_random_forest_prediction():
+    return render_template('randomForestPrediction.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
