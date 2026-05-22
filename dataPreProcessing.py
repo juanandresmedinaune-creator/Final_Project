@@ -27,6 +27,12 @@ data['climate_risk'] = (
     (data['total_precipitation'] > 100)
 ).astype(int)
 
+data['pest_alert'] = (
+    (data['avg_temperature'] > 20) &
+    (data['total_precipitation'] > 20) &
+    (data['relative_yield'] < 0.45)
+).astype(int)
+
 data['category_temp'] = pd.cut(
     data['avg_temperature'],
     bins=[0, 20, 28, 50],
@@ -41,7 +47,7 @@ data['category_rain'] = pd.cut(
 
 labels_col = [
     'department','municipality','crop','year','season', 'pest_name', 'species','category_temp',
-    'category_rain','pest_alert'
+    'category_rain'
 ]
 
 le = LabelEncoder()
