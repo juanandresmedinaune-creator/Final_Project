@@ -25,5 +25,9 @@ def pests_model():
 def decision_tree_development():
     return render_template('decisionTreeDevelopment.html')
 
+@app.route('/models/metrics')
+def view_metrics():
+    return render_template('metrics.html')
+
 if __name__ == '__main__':
     app.run(debug=True)

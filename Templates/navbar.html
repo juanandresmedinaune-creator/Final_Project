@@ -1,12 +1,13 @@
 <nav class="navbar">
     <a href="/" class="navbar-brand"><span></span> AgriML</a>
     <div class="navbar-links">
-        <a href="/" {% if request.path == '/' %}class="active"{% endif %}>Home</a>
-        <a href="/pests/objectives" {% if '/pests' in request.path %}class="active"{% endif %}>Objectives</a>
-        <a href="/pests/objectives#questions" {% if '/pests' in request.path %}class="active"{% endif %}>Key Questions</a>
+        <a href="/" class="{{ 'active' if request.path == '/' else '' }}">Home</a>
+        <a href="/pests/objectives" class="{{ 'active' if request.path == '/pests/objectives' else '' }}">Objectives</a>
+        <a href="/pests/objectives#questions">Key Questions</a>
         <a href="/pests/objectives#data">Data Sources</a>
-        <a href="/pests/dataEngineering"{% if '/pests/dataEngineering' in request.path %}class="active"{% endif %}>Data Engineering</a>
-        <a href="/pests/modelEngineering"{% if '/pests/modelEngineering' in request.path %}class="active"{% endif %}>Model Engineering</a>
-        <a href="/models/development/decision-tree" {% if '/models/development/decision-tree' in request.path %}class="active"{% endif %}>Decision Tree</a>
+        <a href="/pests/dataEngineering" class="{{ 'active' if request.path == '/pests/dataEngineering' else '' }}">Data Engineering</a>
+        <a href="/pests/modelEngineering" class="{{ 'active' if request.path == '/pests/modelEngineering' else '' }}">Model Engineering</a>
+        <a href="/models/development/decision-tree" class="{{ 'active' if request.path == '/models/development/decision-tree' else '' }}">Decision Tree</a>
+        <a href="/models/metrics" class="{{ 'active' if request.path == '/models/metrics' else '' }}">Metrics</a>
     </div>
 </nav>
