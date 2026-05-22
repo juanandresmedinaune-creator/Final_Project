@@ -41,5 +41,11 @@ def model_gb():
     result = models.run_gradient_boosting()
     return render_template('modelDevelopment.html', model=result, active='gb')
 
+# ── Model Evaluation (Logistic Regression - full metrics dashboard) ───────────
+@app.route('/models/evaluation/logistic-regression')
+def model_lr_evaluation():
+    result = models.run_logistic_regression()
+    return render_template('modelEvaluation.html', model=result)
+
 if __name__ == '__main__':
     app.run(debug=True)

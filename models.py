@@ -5,7 +5,11 @@ warnings.filterwarnings('ignore')
 
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn.preprocessing import LabelEncoder, StandardScaler
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import (
+    confusion_matrix, classification_report,
+    accuracy_score, precision_score, recall_score, f1_score,
+    roc_curve, auc
+)
 from sklearn.linear_model import LogisticRegression
 import matplotlib
 matplotlib.use('Agg')
@@ -102,6 +106,55 @@ def _cv_img(scores, model_name):
     return _fig_to_b64(fig)
 
 
+def _roc_img(y_test, y_proba, n_classes, title):
+    """Generate ROC curve image. Supports binary and multiclass (OvR)."""
+    fig, ax = plt.subplots(figsize=(6, 4))
+    if n_classes == 2:
+        fpr, tpr, _ = roc_curve(y_test, y_proba[:, 1])
+        roc_auc = auc(fpr, tpr)
+        ax.plot(fpr, tpr, color='darkorange', lw=2, label=f'ROC curve (AUC = {roc_auc:.3f})')
+        ax.plot([0, 1], [0, 1], color='navy', lw=1, linestyle='--')
+        ax.set_xlim([0.0, 1.0])
+        ax.set_ylim([0.0, 1.05])
+        ax.set_xlabel('False Positive Rate')
+        ax.set_ylabel('True Positive Rate')
+        ax.set_title(title)
+        ax.legend(loc='lower right')
+    else:
+        from sklearn.preprocessing import label_binarize
+        classes = np.unique(y_test)
+        y_bin = label_binarize(y_test, classes=classes)
+        colors = plt.cm.Set1(np.linspace(0, 1, n_classes))
+        for i, color in enumerate(colors):
+            fpr, tpr, _ = roc_curve(y_bin[:, i], y_proba[:, i])
+            roc_auc = auc(fpr, tpr)
+            ax.plot(fpr, tpr, color=color, lw=2, label=f'Class {classes[i]} (AUC={roc_auc:.3f})')
+        ax.plot([0, 1], [0, 1], 'k--', lw=1)
+        ax.set_xlabel('False Positive Rate')
+        ax.set_ylabel('True Positive Rate')
+        ax.set_title(title)
+        ax.legend(loc='lower right', fontsize=8)
+    return _fig_to_b64(fig)
+
+
+def _metrics_bar_img(metrics_dict, title):
+    """Bar chart comparing classification metrics."""
+    labels = list(metrics_dict.keys())
+    values = list(metrics_dict.values())
+    colors = ['#4CAF50', '#2196F3', '#FF9800', '#9C27B0']
+    fig, ax = plt.subplots(figsize=(6, 3.5))
+    bars = ax.bar(labels, values, color=colors[:len(labels)], edgecolor='white', width=0.5)
+    ax.set_ylim(0, 1.1)
+    ax.set_title(title)
+    ax.set_ylabel('Score')
+    for bar, val in zip(bars, values):
+        ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
+                f'{val:.4f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    return _fig_to_b64(fig)
+
+
 def run_logistic_regression():
     try:
         X, y, target = _load_data()
@@ -122,7 +175,51 @@ def run_logistic_regression():
         clf = LogisticRegression(**hyperparams)
         clf.fit(X_train_s, y_train)
         y_pred = clf.predict(X_test_s)
+        y_proba = clf.predict_proba(X_test_s)
 
+        # ── Classification Metrics ──────────────────────────────────────────
+        n_classes = len(np.unique(y))
+        avg = 'binary' if n_classes == 2 else 'weighted'
+
+        accuracy   = round(accuracy_score(y_test, y_pred), 4)
+        precision  = round(precision_score(y_test, y_pred, average=avg, zero_division=0), 4)
+        recall     = round(recall_score(y_test, y_pred, average=avg, zero_division=0), 4)
+        f1         = round(f1_score(y_test, y_pred, average=avg, zero_division=0), 4)
+
+        # ROC AUC
+        if n_classes == 2:
+            from sklearn.preprocessing import label_binarize
+            fpr, tpr, _ = roc_curve(y_test, y_proba[:, 1])
+            roc_auc_val = round(auc(fpr, tpr), 4)
+        else:
+            from sklearn.preprocessing import label_binarize
+            classes = np.unique(y)
+            y_bin = label_binarize(y_test, classes=classes)
+            roc_aucs = []
+            for i in range(n_classes):
+                try:
+                    fa, ta, _ = roc_curve(y_bin[:, i], y_proba[:, i])
+                    roc_aucs.append(auc(fa, ta))
+                except Exception:
+                    pass
+            roc_auc_val = round(np.mean(roc_aucs), 4) if roc_aucs else 0.0
+
+        classification_metrics = {
+            'accuracy': accuracy,
+            'precision': precision,
+            'recall': recall,
+            'f1_score': f1,
+            'roc_auc': roc_auc_val
+        }
+
+        # Classification report as HTML table
+        report_dict = classification_report(y_test, y_pred, output_dict=True, zero_division=0)
+        report_df = pd.DataFrame(report_dict).transpose().round(4)
+        classification_report_html = report_df.to_html(
+            classes='table table-sm table-striped', border=0
+        )
+
+        # Cross-Validation
         cv_scores = cross_val_score(
             LogisticRegression(**hyperparams),
             scaler.fit_transform(X),
@@ -131,6 +228,7 @@ def run_logistic_regression():
             scoring='f1_weighted'
         )
 
+        # Sample predictions
         sample = X_test.iloc[:5].copy()
         sample['Actual'] = y_test.iloc[:5].values
         sample['Predicted'] = y_pred[:5]
@@ -138,12 +236,28 @@ def run_logistic_regression():
             classes='table table-sm', border=0, index=False
         )
 
+        # Feature importances (coefficient magnitude)
         if clf.coef_.ndim > 1:
             importances = np.abs(clf.coef_).mean(axis=0)
         else:
             importances = np.abs(clf.coef_[0])
 
-        importance_b64 = _importance_img(importances, X.columns.tolist(), 'Logistic Regression – Coefficient Magnitude')
+        # ── Images ─────────────────────────────────────────────────────────
+        importance_b64 = _importance_img(importances, X.columns.tolist(),
+                                         'Logistic Regression – Coefficient Magnitude')
+
+        confusion_b64 = _confusion_img(y_test, y_pred,
+                                       'Logistic Regression – Confusion Matrix')
+
+        roc_b64 = _roc_img(y_test, y_proba, n_classes,
+                           'Logistic Regression – ROC Curve')
+
+        metrics_bar_b64 = _metrics_bar_img(
+            {'Accuracy': accuracy, 'Precision': precision, 'Recall': recall, 'F1': f1},
+            'Logistic Regression – Classification Metrics'
+        )
+
+        cv_b64 = _cv_img(cv_scores, 'Logistic Regression')
 
         fig, ax = plt.subplots(figsize=(6, 4))
         unique, counts = np.unique(y_pred, return_counts=True)
@@ -153,13 +267,11 @@ def run_logistic_regression():
         ax.set_ylabel('Count')
         dist_b64 = _fig_to_b64(fig)
 
-        cv_b64 = _cv_img(cv_scores, 'Logistic Regression')
-
         return dict(
             name='Logistic Regression',
             slug='logistic-regression',
             icon='📈',
-            show_metrics=False,
+            show_metrics=True,
             description='Logistic Regression modela la probabilidad de pertenencia a una clase usando la función sigmoide.',
             explanation=[
                 'Se cargan y limpian los datos desde processed_alerts.csv.',
@@ -169,17 +281,36 @@ def run_logistic_regression():
                 'Entrenamiento: clf.fit(X_train_s, y_train).',
                 'Validación cruzada de 5 folds con cross_val_score.',
                 'Predicción sobre el conjunto de prueba.',
+                'Se calculan métricas de clasificación: Accuracy, Precision, Recall, F1, ROC AUC.',
+                'Se genera la Matriz de Confusión y la Curva ROC.',
                 'Se extraen coeficientes para explicar el modelo.'
             ],
             hyperparams=hyperparams,
+            # Classification metrics
+            classification_metrics=classification_metrics,
+            accuracy=accuracy,
+            precision=precision,
+            recall=recall,
+            f1_score=f1,
+            roc_auc=roc_auc_val,
+            classification_report_html=classification_report_html,
+            # CV
             cv_mean=round(cv_scores.mean(), 4),
             cv_std=round(cv_scores.std(), 4),
-            predictions_html=predictions_html,
+            cv_scores=cv_scores.tolist(),
+            # Charts
+            confusion_b64=confusion_b64,
+            roc_b64=roc_b64,
+            metrics_bar_b64=metrics_bar_b64,
             importance_b64=importance_b64,
             dist_b64=dist_b64,
             cv_b64=cv_b64,
+            # Data info
+            predictions_html=predictions_html,
             train_size=len(X_train),
             test_size=len(X_test),
+            n_features=X.shape[1],
+            n_classes=n_classes,
             error=None
         )
     except Exception as e:
@@ -192,14 +323,14 @@ def run_logistic_regression():
             description='No se pudo generar el modelo.',
             explanation=[str(e)],
             hyperparams={},
-            cv_mean=0,
-            cv_std=0,
+            classification_metrics={},
+            accuracy=0, precision=0, recall=0, f1_score=0, roc_auc=0,
+            classification_report_html='',
+            cv_mean=0, cv_std=0, cv_scores=[],
+            confusion_b64='', roc_b64='', metrics_bar_b64='',
+            importance_b64='', dist_b64='', cv_b64='',
             predictions_html='',
-            importance_b64='',
-            dist_b64='',
-            cv_b64='',
-            train_size=0,
-            test_size=0,
+            train_size=0, test_size=0, n_features=0, n_classes=0,
             error=str(e)
         )
 
