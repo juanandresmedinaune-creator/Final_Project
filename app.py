@@ -21,5 +21,9 @@ def pests_model():
     return render_template('modelEngineering.html',
                            predictions = predictions.to_dict(orient='records'))
 
+@app.route('/models/development/decision-tree')
+def decision_tree_development():
+    return render_template('decisionTreeDevelopment.html')
+
 if __name__ == '__main__':
     app.run(debug=True)
