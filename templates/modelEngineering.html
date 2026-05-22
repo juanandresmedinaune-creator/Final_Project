@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -286,7 +287,14 @@
             .hero h1{font-size:2rem;}
         }
     </style>
+    <title>Model Engineering</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
+
 <body>
 
     <header class="topbar">
@@ -439,7 +447,404 @@
         <div class="container">
             AgriML — Agricultural Pest Prediction · Colombia
         </div>
+    {% include 'navbar.html' %}
+
+    <!-- ================================= -->
+    <!-- HERO -->
+    <!-- ================================= -->
+
+    <section class="hero">
+
+        <div class="hero-tag">
+            Model Training
+        </div>
+
+        <h1>
+            Training &
+            <br>
+            <em>Prediction Pipeline</em>
+        </h1>
+
+        <p>
+            Training, validation, and prediction processes applied to multiple
+            machine learning models for agricultural pest alert prediction.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="#models" class="btn-primary">
+                Models
+            </a>
+
+            <a href="#training" class="btn-primary">
+                Training Process
+            </a>
+
+            <a href="#predictions" class="btn-outline">
+                Predictions
+            </a>
+
+            <a href="#decision-tree" class="btn-outline">
+                Decision Tree
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- STATS -->
+    <!-- ================================= -->
+
+    <div class="stats-bar">
+
+        <div class="stat-item">
+            <div class="stat-value">80%</div>
+            <div class="stat-label">Training Data</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-value">20%</div>
+            <div class="stat-label">Testing Data</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">ML Models</div>
+        </div>
+
+        <div class="stat-item">
+            <div class="stat-value">1607</div>
+            <div class="stat-label">Rows</div>
+        </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <!-- ================================= -->
+    <!-- MODELS -->
+    <!-- ================================= -->
+
+    <div class="section" id="models">
+
+        <div class="section-header">
+
+            <div class="section-icon">🧠</div>
+
+            <div>
+                <h2>Machine Learning Models</h2>
+                <p>Models implemented for pest alert prediction</p>
+            </div>
+
+        </div>
+
+        <div class="obj-grid">
+
+            <!-- RANDOM FOREST -->
+
+            <div class="obj-card">
+
+                <div class="obj-num">Model 01</div>
+
+                <h3>Random Forest</h3>
+
+                <p>
+                    Random Forest combines multiple decision trees to improve
+                    prediction stability and reduce overfitting.
+                </p>
+
+                <ul>
+                    <li>Handles numerical and categorical data efficiently.</li>
+                    <li>Suitable for tabular agricultural datasets.</li>
+                    <li>Provides feature importance analysis.</li>
+                </ul>
+
+            </div>
+
+            <!-- DECISION TREE -->
+
+            <div class="obj-card">
+
+                <div class="obj-num">Model 02</div>
+
+                <h3>Decision Tree</h3>
+
+                <p>
+                    A supervised machine learning model that uses a flowchart-like
+                    structure to make predictions.
+                </p>
+
+                <ul>
+                    <li>Easy to interpret and visualize.</li>
+                    <li>Handles non-linear relationships.</li>
+                    <li>Works well for classification tasks.</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <!-- ================================= -->
+    <!-- TRAINING -->
+    <!-- ================================= -->
+
+    <div class="section" id="training">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Training Pipeline</h2>
+                <p>Main stages of the machine learning workflow</p>
+            </div>
+
+        </div>
+
+        <div class="q-grid">
+
+            <div class="q-panel">
+
+                <div class="q-panel-header">
+                    <h3>Dataset Split</h3>
+                </div>
+
+                <ul>
+                    <li>The dataset was divided into training and testing subsets.</li>
+                    <li>An 80/20 ratio was used for model development and validation.</li>
+                </ul>
+
+            </div>
+
+            <div class="q-panel">
+
+                <div class="q-panel-header">
+                    <h3>Training Process</h3>
+                </div>
+
+                <ul>
+                    <li>The model learned patterns from agricultural and climate variables.</li>
+                    <li>Training was performed using supervised learning techniques.</li>
+                </ul>
+
+            </div>
+
+            <div class="q-panel">
+
+                <div class="q-panel-header">
+                    <h3>Hyperparameters</h3>
+                </div>
+
+                <ul>
+                    <li>Random Forest configured using multiple trees.</li>
+                    <li>Decision Tree configured with max_depth=5.</li>
+                </ul>
+
+            </div>
+
+            <div class="q-panel">
+
+                <div class="q-panel-header">
+                    <h3>Validation</h3>
+                </div>
+
+                <ul>
+                    <li>The testing subset was used to evaluate prediction behavior.</li>
+                    <li>Predictions were compared against real dataset values.</li>
+                </ul>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <!-- ================================= -->
+    <!-- RANDOM FOREST PREDICTIONS -->
+    <!-- ================================= -->
+
+    <div class="section" id="predictions">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Random Forest Predictions</h2>
+                <p>Examples generated by the trained machine learning model</p>
+            </div>
+
+        </div>
+
+        <div class="table-wrap prediction-table">
+
+            <table class="data-table compact-table">
+
+                <thead>
+                    <tr>
+                        <th>Real Value</th>
+                        <th>Predicted Value</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in predictions %}
+
+                    <tr>
+                        <td>{{ row.real_value }}</td>
+                        <td>{{ row.predicted_value }}</td>
+                        <td>{{ row.status }}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <hr class="divider">
+
+    <!-- ================================= -->
+    <!-- DECISION TREE -->
+    <!-- ================================= -->
+
+    <section class="section" id="decision-tree">
+
+        <div class="section-header">
+
+            <div class="section-icon">
+                <i class="bi bi-diagram-3"></i>
+            </div>
+
+            <div>
+                <h2>Decision Tree Development</h2>
+                <p>Detailed implementation and prediction examples.</p>
+            </div>
+
+        </div>
+
+        <div class="q-grid">
+
+            <div class="q-panel">
+                <h3>1. Dataset Splitting</h3>
+                <p>The dataset was divided using an 80/20 train-test split strategy.</p>
+            </div>
+
+            <div class="q-panel">
+                <h3>2. Hyperparameter Configuration</h3>
+                <p>Using Gini Impurity criterion and max_depth=5.</p>
+            </div>
+
+            <div class="q-panel">
+                <h3>3. Feature Preprocessing</h3>
+                <p>The model handles non-linear relationships without feature scaling.</p>
+            </div>
+
+        </div>
+
+        <br>
+
+        <div class="table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+                    <tr>
+                        <th>Actual Alert</th>
+                        <th>Predicted Alert</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for row in decision_tree_predictions %}
+
+                    <tr>
+
+                        <td>{{ row.real_value }}</td>
+
+                        <td>{{ row.predicted_value }}</td>
+
+                        <td>
+
+                            {% if row.status == 'Correct' %}
+                                <span class="badge badge-green">
+                                    Correct
+                                </span>
+                            {% else %}
+                                <span class="badge badge-amber">
+                                    Error
+                                </span>
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <hr class="divider">
+
+    <!-- ================================= -->
+    <!-- FEATURE IMPORTANCE -->
+    <!-- ================================= -->
+
+    <div class="section" id="visualization">
+
+        <div class="section-header">
+
+            <div>
+                <h2>Feature Importance</h2>
+                <p>Visualization of the most influential variables in Random Forest</p>
+            </div>
+
+        </div>
+
+        <div style="text-align:center;">
+
+            <img
+                src="{{ url_for('static', filename='feature_importance.png') }}"
+                style="max-width:900px; width:100%; border-radius:20px;">
+
+        </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- FOOTER -->
+    <!-- ================================= -->
+
+    <footer>
+
+        <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+
+        <div class="footer-stack">
+            <span>Python</span>
+            <span>Pandas</span>
+            <span>Scikit-learn</span>
+            <span>Flask</span>
+        </div>
+
     </footer>
 
 </body>
+
 </html>

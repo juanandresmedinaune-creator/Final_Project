@@ -1,16 +1,28 @@
 from flask import Flask, render_template
+import pandas as pd
 import models
 
 app = Flask(__name__)
 
+# =========================
+# HOME
+# =========================
 @app.route('/')
 def home():
     return render_template('mainMenu.html')
 
+
+# =========================
+# OBJECTIVES
+# =========================
 @app.route('/pests/objectives')
 def pests_objectives():
     return render_template('objectives.html')
 
+
+# =========================
+# DATA ENGINEERING
+# =========================
 @app.route('/pests/dataEngineering')
 def pests_data():
     return render_template('dataEngineering.html')
@@ -66,5 +78,9 @@ def model_lr_evaluation():
     print("LOGISTIC RESULT ERROR:", result.get("error"))
     return render_template('modelEvaluation.html', model=result)
 
+
+# =========================
+# APP
+# =========================
 if __name__ == '__main__':
     app.run(debug=True)
