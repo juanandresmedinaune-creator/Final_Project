@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgriML — Model Engineering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+    <style>
+        .models-hero{background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#fff;padding:3rem 2rem;text-align:center;}
+        .models-hero h1{font-size:2.2rem;margin-bottom:.5rem;}
+        .models-hero p{opacity:.85;max-width:600px;margin:0 auto;}
+        .section{max-width:1100px;margin:2rem auto;padding:0 1.5rem;}
+        .comparison-table{width:100%;border-collapse:collapse;margin-top:1.5rem;font-size:.95rem;}
+        .comparison-table th{background:#2d6a4f;color:#fff;padding:.75rem 1rem;text-align:left;}
+        .comparison-table td{padding:.7rem 1rem;border-bottom:1px solid #e0e0e0;}
+        .comparison-table tr:nth-child(even){background:#f5f9f6;}
+        .badge{display:inline-block;padding:.2rem .6rem;border-radius:12px;font-size:.8rem;font-weight:600;}
+        .badge-green{background:#d4edda;color:#155724;}
+        .badge-yellow{background:#fff3cd;color:#856404;}
+        .model-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:2rem;}
+        .model-card{border:1px solid #dce;border-radius:12px;padding:1.5rem;background:#fff;}
+        .model-card h3{margin-top:0;color:#2d6a4f;}
+        .model-card ul{padding-left:1.2rem;}
+        .model-card ul li{margin:.4rem 0;font-size:.9rem;}
+        .stat-row{display:flex;gap:1rem;margin-top:1rem;}
+        .stat-box{flex:1;background:#f0f7f2;border-radius:8px;padding:.75rem;text-align:center;}
+        .stat-box .val{font-size:1.4rem;font-weight:700;color:#2d6a4f;}
+        .stat-box .lbl{font-size:.75rem;color:#666;}
+        .section-title{font-size:1.4rem;font-weight:700;color:#1a3a2a;margin-bottom:.5rem;border-left:4px solid #2d6a4f;padding-left:.75rem;}
+        a.btn-model{display:inline-block;margin-top:1rem;padding:.5rem 1.1rem;background:#2d6a4f;color:#fff;border-radius:8px;text-decoration:none;font-size:.9rem;}
+        a.btn-model:hover{background:#1a3a2a;}
+    </style>
+</head>
+<body>
+{% include 'navbar.html' %}
+
+<div class="models-hero">
+    <h1>🔧 Ingeniería de Modelos</h1>
+    <p>Comparative analysis of three machine learning models trained on agricultural pest alert data from Colombia.</p>
+</div>
+
+<div class="section">
+    <div class="section-title">📊 Comparative Table</div>
+    <p>All models were trained on the same dataset with an 80/20 split and evaluated with 5-fold cross-validation.</p>
+    <table class="comparison-table">
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Accuracy</th>
+                <th>F1-Score (weighted)</th>
+                <th>CV Mean F1</th>
+                <th>CV Std</th>
+                <th>Train Samples</th>
+                <th>Test Samples</th>
+                <th>Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for m in results %}
+            <tr>
+                <td><strong>{{ m.icon }} {{ m.name }}</strong></td>
+                <td>{{ (m.accuracy * 100)|round(2) }}%</td>
+                <td>
+                    <span class="badge {% if m.f1 >= 0.80 %}badge-green{% else %}badge-yellow{% endif %}">
+                        {{ (m.f1 * 100)|round(2) }}%
+                    </span>
+                </td>
+                <td>{{ (m.cv_mean * 100)|round(2) }}%</td>
+                <td>± {{ (m.cv_std * 100)|round(2) }}%</td>
+                <td>{{ m.train_size }}</td>
+                <td>{{ m.test_size }}</td>
+                <td><a href="/models/development/{{ m.slug }}" class="btn-model">View →</a></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="section">
+    <div class="section-title">🧠 Model Summaries</div>
+    <div class="model-cards">
+    {% for m in results %}
+        <div class="model-card">
+            <h3>{{ m.icon }} {{ m.name }}</h3>
+            <p style="font-size:.9rem;color:#444;">{{ m.description }}</p>
+            <ul>
+            {% for step in m.explanation %}
+                <li>{{ step }}</li>
+            {% endfor %}
+            </ul>
+            <div class="stat-row">
+                <div class="stat-box"><div class="val">{{ (m.accuracy*100)|round(1) }}%</div><div class="lbl">Accuracy</div></div>
+                <div class="stat-box"><div class="val">{{ (m.f1*100)|round(1) }}%</div><div class="lbl">F1 Score</div></div>
+                <div class="stat-box"><div class="val">{{ (m.cv_mean*100)|round(1) }}%</div><div class="lbl">CV Mean</div></div>
+            </div>
+            <a href="/models/development/{{ m.slug }}" class="btn-model">Full Development →</a>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+
+<footer>
+    <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+    <div class="footer-stack">
+        <span>Python</span><span>Flask</span><span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
+    </div>
+</footer>
+</body>
+</html>

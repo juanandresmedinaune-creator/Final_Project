@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgriML — {{ model.name }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+    <style>
+        .dev-hero{background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#fff;padding:3rem 2rem;text-align:center;}
+        .dev-hero h1{font-size:2rem;margin-bottom:.5rem;}
+        .dev-hero p{opacity:.85;max-width:620px;margin:.5rem auto 0;}
+        .section{max-width:1050px;margin:2rem auto;padding:0 1.5rem;}
+        .section-title{font-size:1.3rem;font-weight:700;color:#1a3a2a;border-left:4px solid #2d6a4f;padding-left:.75rem;margin-bottom:1rem;}
+        .step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;}
+        .step-card{background:#f0f7f2;border-radius:10px;padding:1.2rem;}
+        .step-card .step-num{font-size:.75rem;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.05em;}
+        .step-card h4{margin:.3rem 0 .5rem;color:#1a3a2a;}
+        .step-card p{font-size:.85rem;color:#444;margin:0;}
+        .viz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:1rem;}
+        .viz-card{border:1px solid #dce;border-radius:10px;overflow:hidden;background:#fff;}
+        .viz-card img{width:100%;display:block;}
+        .viz-card p{padding:.6rem 1rem;font-size:.85rem;color:#555;margin:0;}
+        pre.console{background:#0d1117;color:#58d68d;padding:1.2rem;border-radius:8px;font-size:.82rem;overflow-x:auto;margin-top:.5rem;}
+        .hp-table{border-collapse:collapse;width:100%;font-size:.9rem;margin-top:.5rem;}
+        .hp-table th{background:#2d6a4f;color:#fff;padding:.5rem .9rem;text-align:left;}
+        .hp-table td{padding:.45rem .9rem;border-bottom:1px solid #e0e0e0;}
+        .hp-table tr:nth-child(even){background:#f5f9f6;}
+        .model-nav{display:flex;gap:1rem;margin:1.5rem auto;max-width:1050px;padding:0 1.5rem;}
+        .model-nav a{padding:.5rem 1.1rem;border-radius:8px;text-decoration:none;font-size:.9rem;border:2px solid #2d6a4f;color:#2d6a4f;}
+        .model-nav a.active,.model-nav a:hover{background:#2d6a4f;color:#fff;}
+        .stat-row{display:flex;gap:1rem;margin-top:1rem;}
+        .stat-box{flex:1;background:#f0f7f2;border-radius:8px;padding:.75rem;text-align:center;}
+        .stat-box .val{font-size:1.4rem;font-weight:700;color:#2d6a4f;}
+        .stat-box .lbl{font-size:.75rem;color:#666;}
+    </style>
+</head>
+<body>
+{% include 'navbar.html' %}
+
+<div class="dev-hero">
+    <h1>{{ model.icon }} {{ model.name }}</h1>
+    <p>{{ model.description }}</p>
+</div>
+
+<!-- Sub-navigation -->
+<div class="model-nav">
+    <a href="/models/development/random-forest" {% if active=='rf' %}class="active"{% endif %}>🌲 Random Forest</a>
+    <a href="/models/development/logistic-regression" {% if active=='lr' %}class="active"{% endif %}>📈 Logistic Regression</a>
+    <a href="/models/development/gradient-boosting" {% if active=='gb' %}class="active"{% endif %}>🚀 Gradient Boosting</a>
+</div>
+
+<!-- 1. Metrics -->
+<div class="section">
+    <div class="section-title">📊 Performance Metrics</div>
+    <div class="stat-row">
+        <div class="stat-box"><div class="val">{{ (model.accuracy*100)|round(2) }}%</div><div class="lbl">Accuracy</div></div>
+        <div class="stat-box"><div class="val">{{ (model.f1*100)|round(2) }}%</div><div class="lbl">F1 Score (weighted)</div></div>
+        <div class="stat-box"><div class="val">{{ (model.cv_mean*100)|round(2) }}%</div><div class="lbl">CV Mean F1</div></div>
+        <div class="stat-box"><div class="val">± {{ (model.cv_std*100)|round(2) }}%</div><div class="lbl">CV Std</div></div>
+        <div class="stat-box"><div class="val">{{ model.train_size }}</div><div class="lbl">Train Samples</div></div>
+        <div class="stat-box"><div class="val">{{ model.test_size }}</div><div class="lbl">Test Samples</div></div>
+    </div>
+</div>
+
+<!-- 2. Training process -->
+<div class="section">
+    <div class="section-title">🏋️ Training Process</div>
+    <div class="step-grid">
+        <div class="step-card"><div class="step-num">Step 1</div><h4>Dataset Split</h4><p>80% training / 20% test with stratification to preserve class proportions.</p></div>
+        <div class="step-card"><div class="step-num">Step 2</div><h4>Preprocessing</h4><p>LabelEncoder for categorical features, median imputation for missing values{% if active=='lr' %}, StandardScaler normalization{% endif %}.</p></div>
+        <div class="step-card"><div class="step-num">Step 3</div><h4>Hyperparameter Config</h4><p>Parameters tuned to balance bias-variance tradeoff on this dataset.</p></div>
+        <div class="step-card"><div class="step-num">Step 4</div><h4>Model Training</h4><p>Model fitted on training set; fit time tracked for reproducibility.</p></div>
+        <div class="step-card"><div class="step-num">Step 5</div><h4>Cross-Validation</h4><p>5-fold CV with weighted F1 scoring to validate generalisation.</p></div>
+        <div class="step-card"><div class="step-num">Step 6</div><h4>Prediction</h4><p>Predictions generated on unseen test set and sample shown below.</p></div>
+    </div>
+</div>
+
+<!-- 3. Hyperparameters -->
+<div class="section">
+    <div class="section-title">⚙️ Hyperparameter Configuration</div>
+    <table class="hp-table">
+        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <tbody>
+        {% for k, v in model.hyperparams.items() %}
+            <tr><td><code>{{ k }}</code></td><td>{{ v }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- 4. Code explanation -->
+<div class="section">
+    <div class="section-title">💡 Code Explanation</div>
+    <ol>
+    {% for step in model.explanation %}
+        <li style="margin:.5rem 0;font-size:.95rem;">{{ step }}</li>
+    {% endfor %}
+    </ol>
+</div>
+
+<!-- 5. Console predictions -->
+<div class="section">
+    <div class="section-title">🖥️ Prediction Examples (Console)</div>
+    <pre class="console"># Sample predictions – {{ model.name }}
+# Actual vs Predicted on test set (first 5 rows)
+{{ model.predictions_html | replace('<table', '\n') | striptags }}</pre>
+    <div style="margin-top:1rem;">{{ model.predictions_html | safe }}</div>
+</div>
+
+<!-- 6. Visualizations -->
+<div class="section">
+    <div class="section-title">📈 Visualizations</div>
+    <div class="viz-grid">
+        <div class="viz-card">
+            <img src="data:image/png;base64,{{ model.confusion_b64 }}" alt="Confusion Matrix">
+            <p>Confusion Matrix – actual vs predicted class distribution on the test set.</p>
+        </div>
+        <div class="viz-card">
+            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Feature Importance">
+            <p>Feature Importance – top-10 variables driving model predictions.</p>
+        </div>
+        <div class="viz-card">
+            <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross-Validation">
+            <p>Cross-Validation F1 per fold and overall mean (red dashed line).</p>
+        </div>
+    </div>
+</div>
+
+<div class="section" style="text-align:center;margin-bottom:3rem;">
+    <a href="/models/engineering" style="padding:.6rem 1.4rem;background:#2d6a4f;color:#fff;border-radius:8px;text-decoration:none;">← Back to Model Engineering</a>
+</div>
+
+<footer>
+    <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+    <div class="footer-stack">
+        <span>Python</span><span>Flask</span><span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
+    </div>
+</footer>
+</body>
+</html>

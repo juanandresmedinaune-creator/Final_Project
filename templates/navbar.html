@@ -2,9 +2,33 @@
     <a href="/" class="navbar-brand"><span></span> AgriML</a>
     <div class="navbar-links">
         <a href="/" {% if request.path == '/' %}class="active"{% endif %}>Home</a>
-        <a href="/pests/objectives" {% if '/pests' in request.path %}class="active"{% endif %}>Objectives</a>
-        <a href="/pests/objectives#questions" {% if '/pests' in request.path %}class="active"{% endif %}>Key Questions</a>
+        <a href="/pests/objectives" {% if request.path == '/pests/objectives' %}class="active"{% endif %}>Objectives</a>
+        <a href="/pests/objectives#questions">Key Questions</a>
         <a href="/pests/objectives#data">Data Sources</a>
-        <a href="/pests/dataEngineering"{% if '/pests/dataEngineering' in request.path %}class="active"{% endif %}>Data Engineering</a>
+        <a href="/pests/dataEngineering" {% if request.path == '/pests/dataEngineering' %}class="active"{% endif %}>Data Engineering</a>
+
+        <!-- Ingeniería de modelos -->
+        <div class="nav-dropdown">
+            <a href="/models/engineering"
+               {% if '/models/engineering' in request.path %}class="active"{% endif %}>
+               🔧 Ingeniería de modelos ▾
+            </a>
+            <div class="dropdown-menu">
+                <a href="/models/engineering">Comparativa de modelos</a>
+            </div>
+        </div>
+
+        <!-- Desarrollo de modelos -->
+        <div class="nav-dropdown">
+            <a href="/models/development/random-forest"
+               {% if '/models/development' in request.path %}class="active"{% endif %}>
+               🧪 Desarrollo de modelos ▾
+            </a>
+            <div class="dropdown-menu">
+                <a href="/models/development/random-forest">🌲 Random Forest</a>
+                <a href="/models/development/logistic-regression">📈 Logistic Regression</a>
+                <a href="/models/development/gradient-boosting">🚀 Gradient Boosting</a>
+            </div>
+        </div>
     </div>
 </nav>
