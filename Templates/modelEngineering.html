@@ -197,9 +197,9 @@
 
         </div>
 
-        <div class="table-wrap">
+        <div class="table-wrap prediction-table">
 
-            <table class="data-table">
+            <table class="data-table compact-table">
 
                 <thead>
                     <tr>
@@ -251,18 +251,31 @@
 
     </div>
 
-    <footer>
+    <div class="section" id="results">
+        <div class="section-header">
+            <h2>Results</h2>
+            <p>
+                The Random Forest model identified temperature, precipitation, and crop yield
+                as the most relevant predictors for pest alert classification.
 
-        <p>AgriML — Agricultural Pest Prediction · Colombia</p>
-
-        <div class="footer-stack">
-            <span>Python</span>
-            <span>Pandas</span>
-            <span>Scikit-learn</span>
-            <span>Flask</span>
+                Derived variables such as climate_risk and category_rain showed lower importance,
+                suggesting that the model obtained more predictive information directly from the
+                original numerical climate variables.
+            </p>
         </div>
 
-    </footer>
+        <footer>
+
+            <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+
+            <div class="footer-stack">
+                <span>Python</span>
+                <span>Pandas</span>
+                <span>Scikit-learn</span>
+                <span>Flask</span>
+            </div>
+
+        </footer>
 
 </body>
 

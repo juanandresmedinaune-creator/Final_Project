@@ -17,7 +17,7 @@ def pests_data():
 
 @app.route('/pests/modelEngineering')
 def pests_model():
-    predictions = pd.read_csv("processed_alerts.csv")
+    predictions = pd.read_csv("predictions.csv")
     return render_template('modelEngineering.html',
                            predictions = predictions.to_dict(orient='records'))
 

@@ -18,8 +18,9 @@ print("Training rows: ", X_train.shape[0])
 print("Testing rows: ", X_test.shape[0])
 
 model = RandomForestClassifier(
-    n_estimators=100,
+    n_estimators=200,
     max_depth=10,
+    class_weight='balanced',
     random_state=42
 )
 
@@ -60,10 +61,10 @@ print(examples)
 
 importance = model.feature_importances_
 
-feautures = X.columns
+features = X.columns
 
 importance_df= pd.DataFrame({
-    'Feature': feautures,
+    'Feature': features,
     'Importance': importance
 })
 
