@@ -2,216 +2,259 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>AgriML — {{ model.name }}</title>
+    <title>AgriML — {{ model.name if model is defined and model else 'Model Development' }}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
-    <style>
-        .dev-hero{background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#fff;padding:3rem 2rem;text-align:center;}
-        .dev-hero h1{font-size:2rem;margin-bottom:.5rem;}
-        .dev-hero p{opacity:.85;max-width:640px;margin:.5rem auto 0;}
-        .section{max-width:1050px;margin:2rem auto;padding:0 1.5rem;}
-        .section-title{font-size:1.3rem;font-weight:700;color:#1a3a2a;border-left:4px solid #2d6a4f;padding-left:.75rem;margin-bottom:1rem;}
-        .step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;}
-        .step-card{background:#f0f7f2;border-radius:10px;padding:1.2rem;}
-        .step-card .step-num{font-size:.75rem;font-weight:700;color:#2d6a4f;text-transform:uppercase;letter-spacing:.05em;}
-        .step-card h4{margin:.3rem 0 .5rem;color:#1a3a2a;}
-        .step-card p{font-size:.85rem;color:#444;margin:0;}
-        .viz-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:1rem;}
-        .viz-card{border:1px solid #dce;border-radius:10px;overflow:hidden;background:#fff;}
-        .viz-card img{width:100%;display:block;}
-        .viz-card p{padding:.6rem 1rem;font-size:.85rem;color:#555;margin:0;}
-        pre.console{background:#0d1117;color:#58d68d;padding:1.2rem;border-radius:8px;font-size:.82rem;overflow-x:auto;margin-top:.5rem;}
-        .hp-table{border-collapse:collapse;width:100%;font-size:.9rem;margin-top:.5rem;}
-        .hp-table th{background:#2d6a4f;color:#fff;padding:.5rem .9rem;text-align:left;}
-        .hp-table td{padding:.45rem .9rem;border-bottom:1px solid #e0e0e0;}
-        .hp-table tr:nth-child(even){background:#f5f9f6;}
-        .model-nav{display:flex;gap:1rem;margin:1.5rem auto;max-width:1050px;padding:0 1.5rem;flex-wrap:wrap;}
-        .model-nav a{padding:.5rem 1.1rem;border-radius:8px;text-decoration:none;font-size:.9rem;border:2px solid #2d6a4f;color:#2d6a4f;}
-        .model-nav a.active,.model-nav a:hover{background:#2d6a4f;color:#fff;}
-        .stat-row{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;}
-        .stat-box{flex:1;min-width:100px;background:#f0f7f2;border-radius:8px;padding:.75rem;text-align:center;}
-        .stat-box .val{font-size:1.4rem;font-weight:700;color:#2d6a4f;}
-        .stat-box .lbl{font-size:.75rem;color:#666;}
-        .info-banner{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:1rem 1.2rem;color:#5d4037;font-size:.9rem;margin-top:1rem;}
-        ol li{margin:.5rem 0;font-size:.95rem;line-height:1.6;}
-    </style>
 </head>
 <body>
+
 {% include 'navbar.html' %}
 
-<div class="dev-hero">
-    <h1>{{ model.icon }} {{ model.name }}</h1>
-    <p>{{ model.description }}</p>
-</div>
+{% set has_error = model is defined and model and model.error is defined and model.error %}
+{% set active = active if active is defined else 'lr' %}
 
-<!-- Sub-navigation -->
-<div class="model-nav">
-    <a href="/models/development/random-forest" {% if active=='rf' %}class="active"{% endif %}>🌲 Random Forest</a>
-    <a href="/models/development/logistic-regression" {% if active=='lr' %}class="active"{% endif %}>📈 Logistic Regression</a>
-    <a href="/models/development/gradient-boosting" {% if active=='gb' %}class="active"{% endif %}>🚀 Gradient Boosting</a>
-</div>
-
-<!-- Dataset split info -->
-<div class="section">
-    <div class="section-title">✂️ División del Dataset</div>
-    <div class="step-grid">
-        <div class="step-card">
-            <div class="step-num">Train Set</div>
-            <h4>{{ model.train_size }} muestras</h4>
-            <p>80% del dataset — usado para ajustar los parámetros del modelo.</p>
-        </div>
-        <div class="step-card">
-            <div class="step-num">Test Set</div>
-            <h4>{{ model.test_size }} muestras</h4>
-            <p>20% del dataset — reservado para evaluar el modelo en datos no vistos.</p>
-        </div>
-        <div class="step-card">
-            <div class="step-num">Estratificación</div>
-            <h4>stratify=y</h4>
-            <p>Garantiza que la proporción de clases sea igual en train y test.</p>
-        </div>
-        {% if active == 'lr' %}
-        <div class="step-card">
-            <div class="step-num">Normalización</div>
-            <h4>StandardScaler</h4>
-            <p>Escala cada feature a media=0 y desviación=1 para estabilizar la convergencia.</p>
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Training process -->
-<div class="section">
-    <div class="section-title">🏋️ Proceso de Entrenamiento</div>
-    <div class="step-grid">
-        <div class="step-card"><div class="step-num">Paso 1</div><h4>Carga de datos</h4><p>Lectura de processed_alerts.csv, codificación de categorías e imputación de nulos.</p></div>
-        <div class="step-card"><div class="step-num">Paso 2</div><h4>División</h4><p>80% entrenamiento / 20% prueba con estratificación por clase objetivo.</p></div>
-        <div class="step-card"><div class="step-num">Paso 3</div><h4>Preprocesamiento</h4><p>{% if active=='lr' %}StandardScaler aplicado al train set (fit_transform) y test set (transform).{% else %}LabelEncoder para variables categóricas, mediana para valores faltantes.{% endif %}</p></div>
-        <div class="step-card"><div class="step-num">Paso 4</div><h4>Configuración</h4><p>Hiperparámetros definidos antes del entrenamiento para controlar el comportamiento del modelo.</p></div>
-        <div class="step-card"><div class="step-num">Paso 5</div><h4>Entrenamiento</h4><p>clf.fit(X_train{% if active=='lr' %}_s{% endif %}, y_train) — ajusta los parámetros del modelo.</p></div>
-        <div class="step-card"><div class="step-num">Paso 6</div><h4>Validación</h4><p>Cross-validation de 5 folds para medir la estabilidad del modelo en distintas particiones.</p></div>
-        <div class="step-card"><div class="step-num">Paso 7</div><h4>Predicción</h4><p>clf.predict(X_test{% if active=='lr' %}_s{% endif %}) genera clases para el conjunto de prueba.</p></div>
-    </div>
-</div>
-
-<!-- Hyperparameters -->
-<div class="section">
-    <div class="section-title">⚙️ Configuración de Hiperparámetros</div>
-    <table class="hp-table">
-        <thead><tr><th>Parámetro</th><th>Valor</th><th>Descripción</th></tr></thead>
-        <tbody>
-        {% if active == 'lr' %}
-            <tr><td><code>C</code></td><td>1.0</td><td>Inverso de la fuerza de regularización L2. Valor mayor = menos regularización.</td></tr>
-            <tr><td><code>max_iter</code></td><td>500</td><td>Número máximo de iteraciones para que el solver converja.</td></tr>
-            <tr><td><code>solver</code></td><td>lbfgs</td><td>Algoritmo de optimización; soporta multiclase nativamente sin configuración adicional.</td></tr>
-            <tr><td><code>class_weight</code></td><td>balanced</td><td>Ajusta automáticamente los pesos de cada clase según su frecuencia en el dataset.</td></tr>
-            <tr><td><code>multi_class</code></td><td>auto</td><td>Detecta automáticamente si el problema es binario o multiclase.</td></tr>
-            <tr><td><code>random_state</code></td><td>42</td><td>Semilla para reproducibilidad de resultados.</td></tr>
+<div class="hero">
+    <div class="hero-tag">Model Development</div>
+    <h1>{{ model.icon if model is defined and model else '📈' }} {{ model.name if model is defined and model else 'Logistic Regression' }}</h1>
+    <p>
+        {% if has_error %}
+            {{ model.error }}
         {% else %}
-            {% for k, v in model.hyperparams.items() %}
-            <tr><td><code>{{ k }}</code></td><td>{{ v }}</td><td>—</td></tr>
-            {% endfor %}
+            {{ model.description if model is defined and model else '' }}
         {% endif %}
-        </tbody>
-    </table>
+    </p>
+    <div class="hero-actions">
+        <a href="/models/engineering" class="btn-outline">← Back to Model Engineering</a>
+    </div>
 </div>
 
-<!-- Code explanation -->
-<div class="section">
-    <div class="section-title">💡 Explicación del Código</div>
-    <ol>
-    {% for step in model.explanation %}
-        <li>{{ step }}</li>
-    {% endfor %}
-    </ol>
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-value">{{ model.train_size if model is defined and model else 0 }}</div>
+        <div class="stat-label">Train Samples</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">{{ model.test_size if model is defined and model else 0 }}</div>
+        <div class="stat-label">Test Samples</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">
+            {% if active == 'lr' and not has_error and model is defined and model %}
+                {{ (model.cv_mean * 100)|round(2) }}%
+            {% elif model is defined and model and not has_error %}
+                {{ (model.accuracy * 100)|round(2) }}%
+            {% else %}
+                0%
+            {% endif %}
+        </div>
+        <div class="stat-label">Main Score</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">
+            {% if active == 'lr' and not has_error and model is defined and model %}
+                ± {{ (model.cv_std * 100)|round(2) }}%
+            {% elif model is defined and model and not has_error %}
+                ± {{ (model.cv_std * 100)|round(2) }}%
+            {% else %}
+                0%
+            {% endif %}
+        </div>
+        <div class="stat-label">CV Std</div>
+    </div>
 </div>
 
-<!-- Validation -->
 <div class="section">
-    <div class="section-title">🔁 Proceso de Validación</div>
-    {% if active == 'lr' %}
-    <p style="font-size:.95rem;color:#333;"
-    >Se aplicó <strong>validación cruzada de 5 folds</strong> (<code>cross_val_score</code>)
-    sobre el dataset completo normalizado. El dataset se divide en 5 particiones iguales;
-    en cada iteración el modelo entrena en 4 folds y valida en el restante.
-    Esto entrega 5 puntuaciones F1 independientes que muestran la estabilidad del modelo.</p>
-    <div class="stat-row">
-        <div class="stat-box">
-            <div class="val">5</div>
-            <div class="lbl">Folds (CV)</div>
+    <div class="section-header">
+        <div class="section-icon">🔁</div>
+        <div>
+            <h2>Process Overview</h2>
+            <p>How the model is trained and validated.</p>
         </div>
-        <div class="stat-box">
-            <div class="val">{{ (model.cv_mean * 100)|round(2) }}%</div>
-            <div class="lbl">CV Mean F1</div>
+    </div>
+
+    <div class="obj-grid">
+        <div class="obj-card">
+            <div class="obj-num">Step 1</div>
+            <h3>Load Data</h3>
+            <p>Reads processed_alerts.csv, selects the target column, and prepares features.</p>
         </div>
-        <div class="stat-box">
-            <div class="val">± {{ (model.cv_std * 100)|round(2) }}%</div>
-            <div class="lbl">CV Std</div>
+        <div class="obj-card">
+            <div class="obj-num">Step 2</div>
+            <h3>Split Data</h3>
+            <p>Uses 80% for training and 20% for testing with stratification.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 3</div>
+            <h3>Preprocessing</h3>
+            <p>Applies StandardScaler to normalize the features.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 4</div>
+            <h3>Train Model</h3>
+            <p>Fits the estimator using the prepared training data.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 5</div>
+            <h3>Cross Validation</h3>
+            <p>Evaluates model stability with 5-fold cross validation.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 6</div>
+            <h3>Predictions</h3>
+            <p>Generates predictions on the test set for inspection.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">⚙️</div>
+        <div>
+            <h2>Hyperparameters</h2>
+            <p>Current configuration used in this model.</p>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>C</strong></td><td>1.0</td><td>Inverse regularization strength.</td></tr>
+                <tr><td><strong>max_iter</strong></td><td>500</td><td>Maximum number of solver iterations.</td></tr>
+                <tr><td><strong>solver</strong></td><td>lbfgs</td><td>Optimization algorithm.</td></tr>
+                <tr><td><strong>class_weight</strong></td><td>balanced</td><td>Adjusts class weights automatically.</td></tr>
+                <tr><td><strong>random_state</strong></td><td>42</td><td>Reproducibility seed.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">💡</div>
+        <div>
+            <h2>Code Explanation</h2>
+            <p>Short summary of what the code does.</p>
+        </div>
+    </div>
+
+    <div class="q-panel">
+        <ul>
+            {% if model is defined and model and model.explanation %}
+                {% for step in model.explanation %}
+                    <li>{{ step }}</li>
+                {% endfor %}
+            {% elif has_error %}
+                <li>{{ model.error }}</li>
+            {% else %}
+                <li>No explanation available.</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">🔍</div>
+        <div>
+            <h2>Validation</h2>
+            <p>Cross-validation summary and stability.</p>
+        </div>
+    </div>
+
+    {% if model is defined and model and not has_error %}
+    <div class="stats-bar" style="border:1px solid var(--border); border-radius: var(--radius-md); overflow:hidden;">
+        <div class="stat-item">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Folds</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{ (model.cv_mean * 100)|round(2) }}%</div>
+            <div class="stat-label">CV Mean</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">± {{ (model.cv_std * 100)|round(2) }}%</div>
+            <div class="stat-label">CV Std</div>
         </div>
     </div>
     {% else %}
-    <div class="stat-row">
-        <div class="stat-box"><div class="val">{{ (model.accuracy*100)|round(2) }}%</div><div class="lbl">Accuracy</div></div>
-        <div class="stat-box"><div class="val">{{ (model.f1*100)|round(2) }}%</div><div class="lbl">F1 Score</div></div>
-        <div class="stat-box"><div class="val">{{ (model.cv_mean*100)|round(2) }}%</div><div class="lbl">CV Mean F1</div></div>
-        <div class="stat-box"><div class="val">± {{ (model.cv_std*100)|round(2) }}%</div><div class="lbl">CV Std</div></div>
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">No se pudo mostrar la validación porque ocurrió un error al generar el modelo.</p>
     </div>
     {% endif %}
 </div>
 
-<!-- Console predictions -->
 <div class="section">
-    <div class="section-title">🖥️ Ejemplos de Predicción (Consola)</div>
-    <pre class="console"># {{ model.name }} — Sample Predictions on Test Set
-# Primeras 5 muestras: Actual vs Predicted
-{{ model.predictions_html | replace('<table', '\n') | striptags }}</pre>
-    <div style="margin-top:1rem;">{{ model.predictions_html | safe }}</div>
-</div>
-
-<!-- Visualizations -->
-<div class="section">
-    <div class="section-title">📈 Visualizaciones Gráficas</div>
-    <div class="viz-grid">
-        {% if active == 'lr' %}
-        <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Coefficient Magnitude">
-            <p>Magnitud de coeficientes — los 10 features con mayor influencia en las predicciones del modelo.</p>
+    <div class="section-header">
+        <div class="section-icon">🖥️</div>
+        <div>
+            <h2>Predictions</h2>
+            <p>First rows of actual vs predicted values.</p>
         </div>
-        <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.dist_b64 }}" alt="Predicted Class Distribution">
-            <p>Distribución de clases predichas sobre el conjunto de prueba.</p>
-        </div>
-        <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross-Validation">
-            <p>Curva de validación cruzada F1 por fold con la media general (línea roja).</p>
-        </div>
-        {% else %}
-        <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.confusion_b64 }}" alt="Confusion Matrix">
-            <p>Matriz de confusión — distribución de clases reales vs predichas.</p>
-        </div>
-        <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Feature Importance">
-            <p>Importancia de features — top 10 variables que impulsan las predicciones.</p>
-        </div>
-        <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross-Validation">
-            <p>Validación cruzada F1 por fold y media general (línea roja).</p>
-        </div>
-        {% endif %}
     </div>
+
+    {% if model is defined and model and model.predictions_html %}
+    <div class="table-wrap">
+        {{ model.predictions_html | safe }}
+    </div>
+    {% else %}
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">No hay predicciones para mostrar.</p>
+    </div>
+    {% endif %}
 </div>
 
-{% if active == 'lr' %}
 <div class="section">
-    <div class="info-banner">
-        ⏳ <strong>Métricas de evaluación (Accuracy, F1, Matriz de Confusión)</strong> serán incorporadas en la próxima entrega del proyecto.
+    <div class="section-header">
+        <div class="section-icon">📈</div>
+        <div>
+            <h2>Visualizations</h2>
+            <p>Charts generated from the model.</p>
+        </div>
+    </div>
+
+    {% if model is defined and model and not has_error %}
+    <div class="cards-grid">
+        <div class="menu-card">
+            <div class="card-icon">📊</div>
+            <h3>Coefficient Magnitude</h3>
+            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Coefficient Magnitude" style="width:100%;border-radius:12px;margin-top:10px;">
+            <span class="card-arrow">Top 10 features</span>
+        </div>
+        <div class="menu-card">
+            <div class="card-icon">📦</div>
+            <h3>Predicted Class Distribution</h3>
+            <img src="data:image/png;base64,{{ model.dist_b64 }}" alt="Predicted Class Distribution" style="width:100%;border-radius:12px;margin-top:10px;">
+            <span class="card-arrow">Test set</span>
+        </div>
+        <div class="menu-card">
+            <div class="card-icon">🔁</div>
+            <h3>Cross-Validation</h3>
+            <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross Validation" style="width:100%;border-radius:12px;margin-top:10px;">
+            <span class="card-arrow">5 folds</span>
+        </div>
+    </div>
+    {% else %}
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">No hay visualizaciones disponibles porque el modelo no pudo generarse.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% if active == 'lr' and not has_error %}
+<div class="section">
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">
+            ⏳ <strong>Métricas de evaluación</strong> adicionales serán incorporadas en la próxima entrega del proyecto.
+        </p>
     </div>
 </div>
 {% endif %}
-
-<div class="section" style="text-align:center;margin-bottom:3rem;">
-    <a href="/models/engineering" style="padding:.6rem 1.4rem;background:#2d6a4f;color:#fff;border-radius:8px;text-decoration:none;">← Back to Model Engineering</a>
-</div>
 
 <footer>
     <p>AgriML — Agricultural Pest Prediction · Colombia</p>
@@ -219,5 +262,6 @@
         <span>Python</span><span>Flask</span><span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
     </div>
 </footer>
+
 </body>
 </html>
