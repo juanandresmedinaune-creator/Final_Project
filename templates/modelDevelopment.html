@@ -7,7 +7,7 @@
     <style>
         .dev-hero{background:linear-gradient(135deg,#1a3a2a,#2d6a4f);color:#fff;padding:3rem 2rem;text-align:center;}
         .dev-hero h1{font-size:2rem;margin-bottom:.5rem;}
-        .dev-hero p{opacity:.85;max-width:620px;margin:.5rem auto 0;}
+        .dev-hero p{opacity:.85;max-width:640px;margin:.5rem auto 0;}
         .section{max-width:1050px;margin:2rem auto;padding:0 1.5rem;}
         .section-title{font-size:1.3rem;font-weight:700;color:#1a3a2a;border-left:4px solid #2d6a4f;padding-left:.75rem;margin-bottom:1rem;}
         .step-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-bottom:2rem;}
@@ -24,13 +24,15 @@
         .hp-table th{background:#2d6a4f;color:#fff;padding:.5rem .9rem;text-align:left;}
         .hp-table td{padding:.45rem .9rem;border-bottom:1px solid #e0e0e0;}
         .hp-table tr:nth-child(even){background:#f5f9f6;}
-        .model-nav{display:flex;gap:1rem;margin:1.5rem auto;max-width:1050px;padding:0 1.5rem;}
+        .model-nav{display:flex;gap:1rem;margin:1.5rem auto;max-width:1050px;padding:0 1.5rem;flex-wrap:wrap;}
         .model-nav a{padding:.5rem 1.1rem;border-radius:8px;text-decoration:none;font-size:.9rem;border:2px solid #2d6a4f;color:#2d6a4f;}
         .model-nav a.active,.model-nav a:hover{background:#2d6a4f;color:#fff;}
-        .stat-row{display:flex;gap:1rem;margin-top:1rem;}
-        .stat-box{flex:1;background:#f0f7f2;border-radius:8px;padding:.75rem;text-align:center;}
+        .stat-row{display:flex;gap:1rem;margin-top:1rem;flex-wrap:wrap;}
+        .stat-box{flex:1;min-width:100px;background:#f0f7f2;border-radius:8px;padding:.75rem;text-align:center;}
         .stat-box .val{font-size:1.4rem;font-weight:700;color:#2d6a4f;}
         .stat-box .lbl{font-size:.75rem;color:#666;}
+        .info-banner{background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:1rem 1.2rem;color:#5d4037;font-size:.9rem;margin-top:1rem;}
+        ol li{margin:.5rem 0;font-size:.95rem;line-height:1.6;}
     </style>
 </head>
 <body>
@@ -48,82 +50,164 @@
     <a href="/models/development/gradient-boosting" {% if active=='gb' %}class="active"{% endif %}>🚀 Gradient Boosting</a>
 </div>
 
-<!-- 1. Metrics -->
+<!-- Dataset split info -->
 <div class="section">
-    <div class="section-title">📊 Performance Metrics</div>
-    <div class="stat-row">
-        <div class="stat-box"><div class="val">{{ (model.accuracy*100)|round(2) }}%</div><div class="lbl">Accuracy</div></div>
-        <div class="stat-box"><div class="val">{{ (model.f1*100)|round(2) }}%</div><div class="lbl">F1 Score (weighted)</div></div>
-        <div class="stat-box"><div class="val">{{ (model.cv_mean*100)|round(2) }}%</div><div class="lbl">CV Mean F1</div></div>
-        <div class="stat-box"><div class="val">± {{ (model.cv_std*100)|round(2) }}%</div><div class="lbl">CV Std</div></div>
-        <div class="stat-box"><div class="val">{{ model.train_size }}</div><div class="lbl">Train Samples</div></div>
-        <div class="stat-box"><div class="val">{{ model.test_size }}</div><div class="lbl">Test Samples</div></div>
-    </div>
-</div>
-
-<!-- 2. Training process -->
-<div class="section">
-    <div class="section-title">🏋️ Training Process</div>
+    <div class="section-title">✂️ División del Dataset</div>
     <div class="step-grid">
-        <div class="step-card"><div class="step-num">Step 1</div><h4>Dataset Split</h4><p>80% training / 20% test with stratification to preserve class proportions.</p></div>
-        <div class="step-card"><div class="step-num">Step 2</div><h4>Preprocessing</h4><p>LabelEncoder for categorical features, median imputation for missing values{% if active=='lr' %}, StandardScaler normalization{% endif %}.</p></div>
-        <div class="step-card"><div class="step-num">Step 3</div><h4>Hyperparameter Config</h4><p>Parameters tuned to balance bias-variance tradeoff on this dataset.</p></div>
-        <div class="step-card"><div class="step-num">Step 4</div><h4>Model Training</h4><p>Model fitted on training set; fit time tracked for reproducibility.</p></div>
-        <div class="step-card"><div class="step-num">Step 5</div><h4>Cross-Validation</h4><p>5-fold CV with weighted F1 scoring to validate generalisation.</p></div>
-        <div class="step-card"><div class="step-num">Step 6</div><h4>Prediction</h4><p>Predictions generated on unseen test set and sample shown below.</p></div>
+        <div class="step-card">
+            <div class="step-num">Train Set</div>
+            <h4>{{ model.train_size }} muestras</h4>
+            <p>80% del dataset — usado para ajustar los parámetros del modelo.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">Test Set</div>
+            <h4>{{ model.test_size }} muestras</h4>
+            <p>20% del dataset — reservado para evaluar el modelo en datos no vistos.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">Estratificación</div>
+            <h4>stratify=y</h4>
+            <p>Garantiza que la proporción de clases sea igual en train y test.</p>
+        </div>
+        {% if active == 'lr' %}
+        <div class="step-card">
+            <div class="step-num">Normalización</div>
+            <h4>StandardScaler</h4>
+            <p>Escala cada feature a media=0 y desviación=1 para estabilizar la convergencia.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 
-<!-- 3. Hyperparameters -->
+<!-- Training process -->
 <div class="section">
-    <div class="section-title">⚙️ Hyperparameter Configuration</div>
+    <div class="section-title">🏋️ Proceso de Entrenamiento</div>
+    <div class="step-grid">
+        <div class="step-card"><div class="step-num">Paso 1</div><h4>Carga de datos</h4><p>Lectura de processed_alerts.csv, codificación de categorías e imputación de nulos.</p></div>
+        <div class="step-card"><div class="step-num">Paso 2</div><h4>División</h4><p>80% entrenamiento / 20% prueba con estratificación por clase objetivo.</p></div>
+        <div class="step-card"><div class="step-num">Paso 3</div><h4>Preprocesamiento</h4><p>{% if active=='lr' %}StandardScaler aplicado al train set (fit_transform) y test set (transform).{% else %}LabelEncoder para variables categóricas, mediana para valores faltantes.{% endif %}</p></div>
+        <div class="step-card"><div class="step-num">Paso 4</div><h4>Configuración</h4><p>Hiperparámetros definidos antes del entrenamiento para controlar el comportamiento del modelo.</p></div>
+        <div class="step-card"><div class="step-num">Paso 5</div><h4>Entrenamiento</h4><p>clf.fit(X_train{% if active=='lr' %}_s{% endif %}, y_train) — ajusta los parámetros del modelo.</p></div>
+        <div class="step-card"><div class="step-num">Paso 6</div><h4>Validación</h4><p>Cross-validation de 5 folds para medir la estabilidad del modelo en distintas particiones.</p></div>
+        <div class="step-card"><div class="step-num">Paso 7</div><h4>Predicción</h4><p>clf.predict(X_test{% if active=='lr' %}_s{% endif %}) genera clases para el conjunto de prueba.</p></div>
+    </div>
+</div>
+
+<!-- Hyperparameters -->
+<div class="section">
+    <div class="section-title">⚙️ Configuración de Hiperparámetros</div>
     <table class="hp-table">
-        <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+        <thead><tr><th>Parámetro</th><th>Valor</th><th>Descripción</th></tr></thead>
         <tbody>
-        {% for k, v in model.hyperparams.items() %}
-            <tr><td><code>{{ k }}</code></td><td>{{ v }}</td></tr>
-        {% endfor %}
+        {% if active == 'lr' %}
+            <tr><td><code>C</code></td><td>1.0</td><td>Inverso de la fuerza de regularización L2. Valor mayor = menos regularización.</td></tr>
+            <tr><td><code>max_iter</code></td><td>500</td><td>Número máximo de iteraciones para que el solver converja.</td></tr>
+            <tr><td><code>solver</code></td><td>lbfgs</td><td>Algoritmo de optimización; soporta multiclase nativamente sin configuración adicional.</td></tr>
+            <tr><td><code>class_weight</code></td><td>balanced</td><td>Ajusta automáticamente los pesos de cada clase según su frecuencia en el dataset.</td></tr>
+            <tr><td><code>multi_class</code></td><td>auto</td><td>Detecta automáticamente si el problema es binario o multiclase.</td></tr>
+            <tr><td><code>random_state</code></td><td>42</td><td>Semilla para reproducibilidad de resultados.</td></tr>
+        {% else %}
+            {% for k, v in model.hyperparams.items() %}
+            <tr><td><code>{{ k }}</code></td><td>{{ v }}</td><td>—</td></tr>
+            {% endfor %}
+        {% endif %}
         </tbody>
     </table>
 </div>
 
-<!-- 4. Code explanation -->
+<!-- Code explanation -->
 <div class="section">
-    <div class="section-title">💡 Code Explanation</div>
+    <div class="section-title">💡 Explicación del Código</div>
     <ol>
     {% for step in model.explanation %}
-        <li style="margin:.5rem 0;font-size:.95rem;">{{ step }}</li>
+        <li>{{ step }}</li>
     {% endfor %}
     </ol>
 </div>
 
-<!-- 5. Console predictions -->
+<!-- Validation -->
 <div class="section">
-    <div class="section-title">🖥️ Prediction Examples (Console)</div>
-    <pre class="console"># Sample predictions – {{ model.name }}
-# Actual vs Predicted on test set (first 5 rows)
+    <div class="section-title">🔁 Proceso de Validación</div>
+    {% if active == 'lr' %}
+    <p style="font-size:.95rem;color:#333;"
+    >Se aplicó <strong>validación cruzada de 5 folds</strong> (<code>cross_val_score</code>)
+    sobre el dataset completo normalizado. El dataset se divide en 5 particiones iguales;
+    en cada iteración el modelo entrena en 4 folds y valida en el restante.
+    Esto entrega 5 puntuaciones F1 independientes que muestran la estabilidad del modelo.</p>
+    <div class="stat-row">
+        <div class="stat-box">
+            <div class="val">5</div>
+            <div class="lbl">Folds (CV)</div>
+        </div>
+        <div class="stat-box">
+            <div class="val">{{ (model.cv_mean * 100)|round(2) }}%</div>
+            <div class="lbl">CV Mean F1</div>
+        </div>
+        <div class="stat-box">
+            <div class="val">± {{ (model.cv_std * 100)|round(2) }}%</div>
+            <div class="lbl">CV Std</div>
+        </div>
+    </div>
+    {% else %}
+    <div class="stat-row">
+        <div class="stat-box"><div class="val">{{ (model.accuracy*100)|round(2) }}%</div><div class="lbl">Accuracy</div></div>
+        <div class="stat-box"><div class="val">{{ (model.f1*100)|round(2) }}%</div><div class="lbl">F1 Score</div></div>
+        <div class="stat-box"><div class="val">{{ (model.cv_mean*100)|round(2) }}%</div><div class="lbl">CV Mean F1</div></div>
+        <div class="stat-box"><div class="val">± {{ (model.cv_std*100)|round(2) }}%</div><div class="lbl">CV Std</div></div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Console predictions -->
+<div class="section">
+    <div class="section-title">🖥️ Ejemplos de Predicción (Consola)</div>
+    <pre class="console"># {{ model.name }} — Sample Predictions on Test Set
+# Primeras 5 muestras: Actual vs Predicted
 {{ model.predictions_html | replace('<table', '\n') | striptags }}</pre>
     <div style="margin-top:1rem;">{{ model.predictions_html | safe }}</div>
 </div>
 
-<!-- 6. Visualizations -->
+<!-- Visualizations -->
 <div class="section">
-    <div class="section-title">📈 Visualizations</div>
+    <div class="section-title">📈 Visualizaciones Gráficas</div>
     <div class="viz-grid">
+        {% if active == 'lr' %}
         <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.confusion_b64 }}" alt="Confusion Matrix">
-            <p>Confusion Matrix – actual vs predicted class distribution on the test set.</p>
+            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Coefficient Magnitude">
+            <p>Magnitud de coeficientes — los 10 features con mayor influencia en las predicciones del modelo.</p>
         </div>
         <div class="viz-card">
-            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Feature Importance">
-            <p>Feature Importance – top-10 variables driving model predictions.</p>
+            <img src="data:image/png;base64,{{ model.dist_b64 }}" alt="Predicted Class Distribution">
+            <p>Distribución de clases predichas sobre el conjunto de prueba.</p>
         </div>
         <div class="viz-card">
             <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross-Validation">
-            <p>Cross-Validation F1 per fold and overall mean (red dashed line).</p>
+            <p>Curva de validación cruzada F1 por fold con la media general (línea roja).</p>
         </div>
+        {% else %}
+        <div class="viz-card">
+            <img src="data:image/png;base64,{{ model.confusion_b64 }}" alt="Confusion Matrix">
+            <p>Matriz de confusión — distribución de clases reales vs predichas.</p>
+        </div>
+        <div class="viz-card">
+            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Feature Importance">
+            <p>Importancia de features — top 10 variables que impulsan las predicciones.</p>
+        </div>
+        <div class="viz-card">
+            <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross-Validation">
+            <p>Validación cruzada F1 por fold y media general (línea roja).</p>
+        </div>
+        {% endif %}
     </div>
 </div>
+
+{% if active == 'lr' %}
+<div class="section">
+    <div class="info-banner">
+        ⏳ <strong>Métricas de evaluación (Accuracy, F1, Matriz de Confusión)</strong> serán incorporadas en la próxima entrega del proyecto.
+    </div>
+</div>
+{% endif %}
 
 <div class="section" style="text-align:center;margin-bottom:3rem;">
     <a href="/models/engineering" style="padding:.6rem 1.4rem;background:#2d6a4f;color:#fff;border-radius:8px;text-decoration:none;">← Back to Model Engineering</a>
