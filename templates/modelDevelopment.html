@@ -145,15 +145,14 @@
 
     <div class="q-panel">
         <ul>
-            {% if model is defined and model and model.explanation %}
-                {% for step in model.explanation %}
-                    <li>{{ step }}</li>
-                {% endfor %}
-            {% elif has_error %}
-                <li>{{ model.error }}</li>
-            {% else %}
-                <li>No explanation available.</li>
-            {% endif %}
+            <li>Data is loaded and cleaned from processed_alerts.csv.</li>
+            <li>Dataset split: 80% training / 20% test with stratification.</li>
+            <li>Preprocessing: StandardScaler is applied.</li>
+            <li>Configuration: C=1.0, solver=lbfgs, max_iter=500, class_weight=balanced, random_state=42.</li>
+            <li>Training: clf.fit(X_train_s, y_train).</li>
+            <li>5-fold cross-validation with cross_val_score.</li>
+            <li>Prediction on the test set.</li>
+            <li>Coefficients are extracted to explain the model.</li>
         </ul>
     </div>
 </div>
