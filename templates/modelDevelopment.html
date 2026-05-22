@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgriML — {{ model.name if model is defined and model else 'Model Development' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+{% set has_error = model is defined and model and model.error is defined and model.error %}
+{% set active = active if active is defined else 'lr' %}
+
+<div class="hero">
+    <div class="hero-tag">Model Development</div>
+    <h1>{{ model.icon if model is defined and model else '📈' }} {{ model.name if model is defined and model else 'Logistic Regression' }}</h1>
+    <p>
+        {% if has_error %}
+            {{ model.error }}
+        {% else %}
+            {{ model.description if model is defined and model else '' }}
+        {% endif %}
+    </p>
+    <div class="hero-actions">
+        <a href="/models/engineering" class="btn-outline">← Back to Model Engineering</a>
+    </div>
+</div>
+
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-value">{{ model.train_size if model is defined and model else 0 }}</div>
+        <div class="stat-label">Train Samples</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">{{ model.test_size if model is defined and model else 0 }}</div>
+        <div class="stat-label">Test Samples</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">
+            {% if active == 'lr' and not has_error and model is defined and model %}
+                {{ (model.cv_mean * 100)|round(2) }}%
+            {% elif model is defined and model and not has_error %}
+                {{ (model.accuracy * 100)|round(2) }}%
+            {% else %}
+                0%
+            {% endif %}
+        </div>
+        <div class="stat-label">Main Score</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-value">
+            {% if active == 'lr' and not has_error and model is defined and model %}
+                ± {{ (model.cv_std * 100)|round(2) }}%
+            {% elif model is defined and model and not has_error %}
+                ± {{ (model.cv_std * 100)|round(2) }}%
+            {% else %}
+                0%
+            {% endif %}
+        </div>
+        <div class="stat-label">CV Std</div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">🔁</div>
+        <div>
+            <h2>Process Overview</h2>
+            <p>How the model is trained and validated.</p>
+        </div>
+    </div>
+
+    <div class="obj-grid">
+        <div class="obj-card">
+            <div class="obj-num">Step 1</div>
+            <h3>Load Data</h3>
+            <p>Reads processed_alerts.csv, selects the target column, and prepares features.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 2</div>
+            <h3>Split Data</h3>
+            <p>Uses 80% for training and 20% for testing with stratification.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 3</div>
+            <h3>Preprocessing</h3>
+            <p>Applies StandardScaler to normalize the features.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 4</div>
+            <h3>Train Model</h3>
+            <p>Fits the estimator using the prepared training data.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 5</div>
+            <h3>Cross Validation</h3>
+            <p>Evaluates model stability with 5-fold cross validation.</p>
+        </div>
+        <div class="obj-card">
+            <div class="obj-num">Step 6</div>
+            <h3>Predictions</h3>
+            <p>Generates predictions on the test set for inspection.</p>
+        </div>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">⚙️</div>
+        <div>
+            <h2>Hyperparameters</h2>
+            <p>Current configuration used in this model.</p>
+        </div>
+    </div>
+
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Value</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>C</strong></td><td>1.0</td><td>Inverse regularization strength.</td></tr>
+                <tr><td><strong>max_iter</strong></td><td>500</td><td>Maximum number of solver iterations.</td></tr>
+                <tr><td><strong>solver</strong></td><td>lbfgs</td><td>Optimization algorithm.</td></tr>
+                <tr><td><strong>class_weight</strong></td><td>balanced</td><td>Adjusts class weights automatically.</td></tr>
+                <tr><td><strong>random_state</strong></td><td>42</td><td>Reproducibility seed.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">💡</div>
+        <div>
+            <h2>Code Explanation</h2>
+            <p>Short summary of what the code does.</p>
+        </div>
+    </div>
+
+    <div class="q-panel">
+        <ul>
+            <li>Data is loaded and cleaned from processed_alerts.csv.</li>
+            <li>Dataset split: 80% training / 20% test with stratification.</li>
+            <li>Preprocessing: StandardScaler is applied.</li>
+            <li>Configuration: C=1.0, solver=lbfgs, max_iter=500, class_weight=balanced, random_state=42.</li>
+            <li>Training: clf.fit(X_train_s, y_train).</li>
+            <li>5-fold cross-validation with cross_val_score.</li>
+            <li>Prediction on the test set.</li>
+            <li>Coefficients are extracted to explain the model.</li>
+        </ul>
+    </div>
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">🔍</div>
+        <div>
+            <h2>Validation</h2>
+            <p>Cross-validation summary and stability.</p>
+        </div>
+    </div>
+
+    {% if model is defined and model and not has_error %}
+    <div class="stats-bar" style="border:1px solid var(--border); border-radius: var(--radius-md); overflow:hidden;">
+        <div class="stat-item">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Folds</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">{{ (model.cv_mean * 100)|round(2) }}%</div>
+            <div class="stat-label">CV Mean</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">± {{ (model.cv_std * 100)|round(2) }}%</div>
+            <div class="stat-label">CV Std</div>
+        </div>
+    </div>
+    {% else %}
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">No se pudo mostrar la validación porque ocurrió un error al generar el modelo.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">🖥️</div>
+        <div>
+            <h2>Predictions</h2>
+            <p>First rows of actual vs predicted values.</p>
+        </div>
+    </div>
+
+    {% if model is defined and model and model.predictions_html %}
+    <div class="table-wrap">
+        {{ model.predictions_html | safe }}
+    </div>
+    {% else %}
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">No hay predicciones para mostrar.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div class="section">
+    <div class="section-header">
+        <div class="section-icon">📈</div>
+        <div>
+            <h2>Visualizations</h2>
+            <p>Charts generated from the model.</p>
+        </div>
+    </div>
+
+    {% if model is defined and model and not has_error %}
+    <div class="cards-grid">
+        <div class="menu-card">
+            <div class="card-icon">📊</div>
+            <h3>Coefficient Magnitude</h3>
+            <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Coefficient Magnitude" style="width:100%;border-radius:12px;margin-top:10px;">
+            <span class="card-arrow">Top 10 features</span>
+        </div>
+        <div class="menu-card">
+            <div class="card-icon">📦</div>
+            <h3>Predicted Class Distribution</h3>
+            <img src="data:image/png;base64,{{ model.dist_b64 }}" alt="Predicted Class Distribution" style="width:100%;border-radius:12px;margin-top:10px;">
+            <span class="card-arrow">Test set</span>
+        </div>
+        <div class="menu-card">
+            <div class="card-icon">🔁</div>
+            <h3>Cross-Validation</h3>
+            <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross Validation" style="width:100%;border-radius:12px;margin-top:10px;">
+            <span class="card-arrow">5 folds</span>
+        </div>
+    </div>
+    {% else %}
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">No hay visualizaciones disponibles porque el modelo no pudo generarse.</p>
+    </div>
+    {% endif %}
+</div>
+
+{% if active == 'lr' and not has_error %}
+<div class="section">
+    <div class="q-panel">
+        <p style="color: var(--text-secondary);">
+            ⏳ <strong>Métricas de evaluación</strong> adicionales serán incorporadas en la próxima entrega del proyecto.
+        </p>
+    </div>
+</div>
+{% endif %}
+
+<footer>
+    <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+    <div class="footer-stack">
+        <span>Python</span><span>Flask</span><span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
+    </div>
+</footer>
+
+</body>
+</html>

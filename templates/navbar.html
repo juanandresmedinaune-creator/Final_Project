@@ -1,0 +1,40 @@
+<nav class="navbar">
+    <a href="/" class="navbar-brand"><span></span> AgriML</a>
+    <div class="navbar-links">
+        <a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+        <a href="/pests/objectives" class="{% if request.path == '/pests/objectives' %}active{% endif %}">Objectives</a>
+        <a href="/pests/objectives#questions">Key Questions</a>
+        <a href="/pests/objectives#data">Data Sources</a>
+        <a href="/pests/dataEngineering" class="{% if request.path == '/pests/dataEngineering' %}active{% endif %}">Data Engineering</a>
+        <a href="/pests/dataEvaluation" class="{% if request.path == '/pests/dataEvaluation' %}active{% endif %}">Data Evaluation</a>
+    </div>
+
+    <div class="nav-dropdown">
+        <a href="/models/engineering" class="{% if '/models/engineering' in request.path %}active{% endif %}">
+           🔧 Ingeniería de modelos ▾
+        </a>
+        <div class="dropdown-menu">
+            <a href="/models/engineering">Comparativa de modelos</a>
+        </div>
+    </div>
+
+    <div class="nav-dropdown">
+        <a href="/models/development/random-forest" class="{% if '/models/development' in request.path %}active{% endif %}">
+           🧪 Desarrollo de modelos ▾
+        </a>
+        <div class="dropdown-menu">
+            <a href="/models/development/random-forest">🌲 Random Forest</a>
+            <a href="/models/development/logistic-regression">📈 Logistic Regression</a>
+            <a href="/models/development/gradient-boosting">🚀 Gradient Boosting</a>
+        </div>
+    </div>
+
+    <div class="nav-dropdown">
+        <a href="/models/evaluation/logistic-regression" class="{% if '/models/evaluation' in request.path %}active{% endif %}">
+           📊 Evaluación ▾
+        </a>
+        <div class="dropdown-menu">
+            <a href="/models/evaluation/logistic-regression">📈 Logistic Regression</a>
+        </div>
+    </div>
+</nav>
