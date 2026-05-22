@@ -15,7 +15,7 @@ X_train, X_test, y_train, y_test = train_test_split (
 )
 
 print("Training rows: ", X_train.shape[0])
-print("Testing rows: ", X_train.shape[0])
+print("Testing rows: ", X_test.shape[0])
 
 model = RandomForestClassifier(
     n_estimators=100,
@@ -29,21 +29,54 @@ model.fit(X_train, y_train)
 
 y_pred = model.predict(X_test)
 
-importance = pd.DataFrame({
-    'Feature': X.columns,
-    'Importance': model.feature_importances_
+predictions_df = pd.DataFrame({
+    "real_value": y_test.values[:10],
+    "predicted_value": y_pred[:10]
 })
 
-importance = importance.sort_values(
+predictions_df["status"] = (
+    predictions_df["real_value"] ==
+    predictions_df["predicted_value"]
+)
+
+predictions_df["status"] = predictions_df["status"].map({
+    True: "Correct Prediction",
+    False: "Prediction Error"
+})
+
+predictions_df.to_csv(
+    "predictions.csv",
+    index=False
+)
+
+print("\nExample Predictions:")
+
+examples = pd.DataFrame({
+    "Real Value": y_test[:10].values,
+    "Predicted Value": y_pred[:10]
+})
+
+print(examples)
+
+importance = model.feature_importances_
+
+feautures = X.columns
+
+importance_df= pd.DataFrame({
+    'Feature': feautures,
+    'Importance': importance
+})
+
+importance_df = importance_df.sort_values(
     by='Importance',
-    ascending=False
+    ascending=True
 )
 
 plt.figure(figsize=(10,6))
 
 plt.barh(
-    importance['Feature'],
-    importance['Importance']
+    importance_df['Feature'],
+    importance_df['Importance']
 )
 
 plt.xlabel("Importance")
@@ -56,6 +89,7 @@ plt.tight_layout()
 plt.savefig("static/feature_importance.png")
 
 print("\nFeature importance graph saved.")
+print(data['pest_alert'].value_counts())
 
 #Save Model
 
