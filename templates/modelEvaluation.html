@@ -1,367 +1,896 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Evaluation - Logistic Regression</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        AgriML - Model Evaluation
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='pests.css') }}">
+
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
 </head>
+
 <body>
 
-    <header class="topbar">
-        <div class="container">
-            {% include 'navbar.html' %}
-        </div>
-    </header>
+    <!-- ================================= -->
+    <!-- NAVBAR -->
+    <!-- ================================= -->
+
+    {% include 'navbar.html' %}
+
+    <!-- ================================= -->
+    <!-- HERO -->
+    <!-- ================================= -->
 
     <section class="hero">
-        <div class="container hero-grid">
+
+        <div class="hero-tag">
+            Model Evaluation
+        </div>
+
+        <h1>
+            Machine Learning
+            <em>Metrics Dashboard</em>
+        </h1>
+
+        <p>
+            Comparative evaluation of machine learning models for
+            agricultural pest propagation prediction using climate
+            and agricultural records from Colombia.
+        </p>
+
+        <div class="hero-actions">
+
+            <a href="#random-forest"
+               class="btn-primary">
+                Random Forest
+            </a>
+
+            <a href="#logistic-regression"
+               class="btn-outline">
+                Logistic Regression
+            </a>
+
+            <a href="#decision-tree"
+               class="btn-outline">
+                Decision Tree
+            </a>
+
+            <a href="#comparison"
+               class="btn-outline">
+                Comparison
+            </a>
+
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- STATS -->
+    <!-- ================================= -->
+
+    <div class="stats-bar">
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                3
+            </div>
+
+            <div class="stat-label">
+                ML Models
+            </div>
+
+        </div>
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                1607
+            </div>
+
+            <div class="stat-label">
+                Dataset Rows
+            </div>
+
+        </div>
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                80%
+            </div>
+
+            <div class="stat-label">
+                Training Split
+            </div>
+
+        </div>
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                20%
+            </div>
+
+            <div class="stat-label">
+                Testing Split
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ================================= -->
+    <!-- RANDOM FOREST -->
+    <!-- ================================= -->
+
+    <section class="section"
+             id="random-forest">
+
+        <div class="section-header">
+
+            <div class="section-icon">
+                🌳
+            </div>
+
             <div>
-                <div class="pill">Model Evaluation</div>
-                <h1>📊 Logistic Regression Evaluation Dashboard</h1>
+
+                <h2>
+                    Random Forest Evaluation
+                </h2>
+
                 <p>
-                    Full evaluation dashboard for Logistic Regression with classification metrics,
-                    confusion matrix, ROC curve, cross-validation, comparative analysis,
-                    and final model justification.
+                    Classification metrics and diagnostic analysis
+                    generated from the Random Forest algorithm.
                 </p>
 
-                <div class="hero-actions">
-                    <a href="#metrics" class="btn btn-primary">View metrics</a>
-                    <a href="/models/development/logistic-regression" class="btn btn-secondary">View development</a>
-                </div>
             </div>
 
-            <div class="hero-side">
-                <div class="label">Analyzed model</div>
-                <div class="big">{{ model.name }}</div>
-                <div class="sub">
-                    Evaluation focused on performance, interpretability, and stability
-                    on the test set and cross-validation.
-                </div>
-            </div>
         </div>
-    </section>
 
-    <section class="stats-strip">
-        <div class="container stats-grid">
-            <div class="stat-cell">
-                <div class="stat-value">{{ model.train_size }}</div>
-                <div class="stat-label">Train samples</div>
+        <!-- METRICS -->
+
+        <div class="stats-bar">
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ random_forest.accuracy }}
+                </div>
+
+                <div class="stat-label">
+                    Accuracy
+                </div>
+
             </div>
-            <div class="stat-cell">
-                <div class="stat-value">{{ model.test_size }}</div>
-                <div class="stat-label">Test samples</div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ random_forest.precision }}
+                </div>
+
+                <div class="stat-label">
+                    Precision
+                </div>
+
             </div>
-            <div class="stat-cell">
-                <div class="stat-value">{{ model.cv_mean }}</div>
-                <div class="stat-label">Best CV mean</div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ random_forest.recall }}
+                </div>
+
+                <div class="stat-label">
+                    Recall
+                </div>
+
             </div>
-            <div class="stat-cell">
-                <div class="stat-value">{{ model.n_features }}</div>
-                <div class="stat-label">Input features</div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ random_forest.f1_score }}
+                </div>
+
+                <div class="stat-label">
+                    F1 Score
+                </div>
+
             </div>
+
         </div>
-    </section>
 
-    <main class="container">
-        <section class="section" id="metrics">
-            <div class="section-head">
-                <div class="section-icon">📈</div>
-                <div>
-                    <h2>Classification Metrics</h2>
-                    <p>Main performance indicators on the test set.</p>
-                </div>
-            </div>
+        <!-- CLASSIFICATION -->
 
-            <div class="cards-5">
-                <article class="card">
-                    <div class="metric-name">Accuracy</div>
-                    <div class="metric-number green">{{ model.accuracy }}</div>
-                    <span class="metric-tag">Overall correctness</span>
-                </article>
+        <div class="q-grid">
 
-                <article class="card">
-                    <div class="metric-name">Precision</div>
-                    <div class="metric-number blue">{{ model.precision }}</div>
-                    <span class="metric-tag">TP / TP + FP</span>
-                </article>
+            <div class="q-panel">
 
-                <article class="card">
-                    <div class="metric-name">Recall</div>
-                    <div class="metric-number orange">{{ model.recall }}</div>
-                    <span class="metric-tag">Sensitivity</span>
-                </article>
+                <h3>
+                    Accuracy
+                </h3>
 
-                <article class="card">
-                    <div class="metric-name">F1 Score</div>
-                    <div class="metric-number purple">{{ model.f1_score }}</div>
-                    <span class="metric-tag">Precision/Recall balance</span>
-                </article>
-
-                <article class="card">
-                    <div class="metric-name">ROC AUC</div>
-                    <div class="metric-number pink">{{ model.roc_auc }}</div>
-                    <span class="metric-tag">ROC area</span>
-                </article>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="section-head">
-                <div class="section-icon">🖼️</div>
-                <div>
-                    <h2>Visualizations</h2>
-                    <p>Charts automatically generated during model evaluation.</p>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="panel">
-                    <h3 class="panel-title">Metrics comparison</h3>
-                    <p class="panel-sub">Visual summary of Accuracy, Precision, Recall, and F1.</p>
-                    <div class="img-box">
-                        {% if model.metrics_bar_b64 %}
-                        <img src="data:image/png;base64,{{ model.metrics_bar_b64 }}" alt="Metrics comparison">
-                        {% else %}
-                        <p class="muted">Not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h3 class="panel-title">Confusion matrix</h3>
-                    <p class="panel-sub">Distribution of correct and incorrect predictions.</p>
-                    <div class="img-box">
-                        {% if model.confusion_b64 %}
-                        <img src="data:image/png;base64,{{ model.confusion_b64 }}" alt="Confusion matrix">
-                        {% else %}
-                        <p class="muted">Not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h3 class="panel-title">ROC curve</h3>
-                    <p class="panel-sub">Discriminative ability of the classifier.</p>
-                    <div class="img-box">
-                        {% if model.roc_b64 %}
-                        <img src="data:image/png;base64,{{ model.roc_b64 }}" alt="ROC curve">
-                        {% else %}
-                        <p class="muted">Not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h3 class="panel-title">Cross-validation</h3>
-                    <p class="panel-sub">F1-score trend across the 5 folds.</p>
-                    <div class="img-box">
-                        {% if model.cv_b64 %}
-                        <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="Cross validation">
-                        {% else %}
-                        <p class="muted">Not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="section-head">
-                <div class="section-icon">🧾</div>
-                <div>
-                    <h2>Detailed results</h2>
-                    <p>Per-class report, fold scores, and sample predictions.</p>
-                </div>
-            </div>
-
-            <div class="grid-2">
-                <div class="panel">
-                    <h3 class="panel-title">Classification report</h3>
-                    <p class="panel-sub">Precision, recall, F1-score, and support by class.</p>
-                    <div style="overflow:auto">
-                        {% if model.classification_report_html %}
-                            {{ model.classification_report_html | safe }}
-                        {% else %}
-                            <p class="muted">Not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h3 class="panel-title">Fold scores</h3>
-                    <p class="panel-sub">Performance during cross-validation.</p>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Fold</th>
-                                <th>F1 score</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for s in model.cv_scores %}
-                            <tr>
-                                <td>Fold {{ loop.index }}</td>
-                                <td class="success">{{ '%.4f' % s }}</td>
-                            </tr>
-                            {% endfor %}
-                            <tr>
-                                <td>Mean</td>
-                                <td class="success">{{ model.cv_mean }}</td>
-                            </tr>
-                            <tr>
-                                <td>Std. dev.</td>
-                                <td>{{ model.cv_std }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="panel">
-                    <h3 class="panel-title">Feature importance</h3>
-                    <p class="panel-sub">Coefficient magnitude from Logistic Regression.</p>
-                    <div class="img-box">
-                        {% if model.importance_b64 %}
-                        <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Feature importance">
-                        {% else %}
-                        <p class="muted">Not available.</p>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <h3 class="panel-title">Sample predictions</h3>
-                    <p class="panel-sub">Example predictions from the test set.</p>
-                    <div style="overflow:auto">
-                        {{ model.predictions_html | safe }}
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="section-head">
-                <div class="section-icon">📋</div>
-                <div>
-                    <h2>Model comparison</h2>
-                    <p>Prepared table to compare the three project models.</p>
-                </div>
-            </div>
-
-            <div class="panel">
-                <h3 class="panel-title">Comparison table</h3>
-                <p class="panel-sub">Your teammates can later complete Random Forest and Gradient Boosting values.</p>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Metric</th>
-                            <th>Logistic Regression</th>
-                            <th>Random Forest</th>
-                            <th>Gradient Boosting</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Accuracy</td>
-                            <td class="success">{{ model.accuracy }}</td>
-                            <td class="muted">—</td>
-                            <td class="muted">—</td>
-                        </tr>
-                        <tr>
-                            <td>Precision</td>
-                            <td class="success">{{ model.precision }}</td>
-                            <td class="muted">—</td>
-                            <td class="muted">—</td>
-                        </tr>
-                        <tr>
-                            <td>Recall</td>
-                            <td class="success">{{ model.recall }}</td>
-                            <td class="muted">—</td>
-                            <td class="muted">—</td>
-                        </tr>
-                        <tr>
-                            <td>F1 Score</td>
-                            <td class="success">{{ model.f1_score }}</td>
-                            <td class="muted">—</td>
-                            <td class="muted">—</td>
-                        </tr>
-                        <tr>
-                            <td>ROC AUC</td>
-                            <td class="success">{{ model.roc_auc }}</td>
-                            <td class="muted">—</td>
-                            <td class="muted">—</td>
-                        </tr>
-                        <tr>
-                            <td>CV Mean</td>
-                            <td class="success">{{ model.cv_mean }}</td>
-                            <td class="muted">—</td>
-                            <td class="muted">—</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="section-head">
-                <div class="section-icon">✅</div>
-                <div>
-                    <h2>Final selected model</h2>
-                    <p>Technical justification for using Logistic Regression as the baseline model.</p>
-                </div>
-            </div>
-
-            <div class="banner">
-                <h3>Logistic Regression as the reference model</h3>
                 <p>
-                    Logistic Regression offers strong interpretability, efficient training,
-                    good classification performance, and stable cross-validation results.
-                    If the difference versus Random Forest and Gradient Boosting is small,
-                    it remains a very strong choice due to simplicity and lower overfitting risk.
+                    Measures the percentage of correctly classified
+                    agricultural pest alerts using climate and crop data.
                 </p>
+
             </div>
 
-            <div class="grid-2" style="margin-top:18px;">
-                <div class="panel">
-                    <h3 class="panel-title">Technical justification</h3>
-                    <ul class="list">
-                        <li>Direct interpretability through coefficients.</li>
-                        <li>L2 regularization with <span class="mono">C=1.0</span>.</li>
-                        <li>Class balancing with <span class="mono">class_weight='balanced'</span>.</li>
-                        <li>Fast and stable training process.</li>
-                        <li>Good generalization with 5-fold cross-validation.</li>
-                    </ul>
+            <div class="q-panel">
+
+                <h3>
+                    Precision
+                </h3>
+
+                <p>
+                    Evaluates how reliable the positive pest predictions
+                    generated by the Random Forest model are.
+                </p>
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    Recall
+                </h3>
+
+                <p>
+                    Indicates the model’s capability to detect real pest
+                    propagation threats within the dataset.
+                </p>
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    F1 Score
+                </h3>
+
+                <p>
+                    Harmonic balance between Precision and Recall,
+                    representing overall classification quality.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- VISUALIZATIONS -->
+
+        <div class="q-grid">
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    Confusion Matrix
+                </h3>
+
+                {% if random_forest.confusion_b64 %}
+
+                <img src="data:image/png;base64,{{ random_forest.confusion_b64 }}"
+                     alt="Random Forest Confusion Matrix"
+                     style="width:100%; border-radius:12px;">
+
+                {% endif %}
+
+            </div>
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    ROC Curve
+                </h3>
+
+                {% if random_forest.roc_b64 %}
+
+                <img src="data:image/png;base64,{{ random_forest.roc_b64 }}"
+                     alt="Random Forest ROC Curve"
+                     style="width:100%; border-radius:12px;">
+
+                {% endif %}
+
+            </div>
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    Feature Importance
+                </h3>
+
+                {% if random_forest.importance_b64 %}
+
+                <img src="data:image/png;base64,{{ random_forest.importance_b64 }}"
+                     alt="Feature Importance"
+                     style="width:100%; border-radius:12px;">
+
+                {% endif %}
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    Sample Predictions
+                </h3>
+
+                <div style="overflow:auto;">
+
+                    {{ random_forest.predictions_html | safe }}
+
                 </div>
 
-                <div class="panel">
-                    <h3 class="panel-title">Model parameters</h3>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Parameter</th>
-                                <th>Value</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for k, v in model.hyperparams.items() %}
-                            <tr>
-                                <td class="mono">{{ k }}</td>
-                                <td>{{ v }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
             </div>
 
-            <div class="actions">
-                <a href="/models/development/logistic-regression" class="btn btn-secondary">← Model development</a>
-                <a href="/models/engineering" class="btn btn-secondary">← Model engineering</a>
-                <a href="/" class="btn btn-primary">🏠 Home</a>
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- LOGISTIC REGRESSION -->
+    <!-- ================================= -->
+
+    <section class="section"
+             id="logistic-regression">
+
+        <div class="section-header">
+
+            <div class="section-icon">
+                📈
             </div>
-        </section>
-    </main>
+
+            <div>
+
+                <h2>
+                    Logistic Regression
+                </h2>
+
+                <p>
+                    Performance evaluation and classification metrics
+                    for Logistic Regression.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="stats-bar">
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ logistic_regression.accuracy }}
+                </div>
+
+                <div class="stat-label">
+                    Accuracy
+                </div>
+
+            </div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ logistic_regression.precision }}
+                </div>
+
+                <div class="stat-label">
+                    Precision
+                </div>
+
+            </div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ logistic_regression.recall }}
+                </div>
+
+                <div class="stat-label">
+                    Recall
+                </div>
+
+            </div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    {{ logistic_regression.f1_score }}
+                </div>
+
+                <div class="stat-label">
+                    F1 Score
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="q-grid">
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    ROC Curve
+                </h3>
+
+                {% if logistic_regression.roc_b64 %}
+
+                <img src="data:image/png;base64,{{ logistic_regression.roc_b64 }}"
+                     style="width:100%; border-radius:12px;">
+
+                {% endif %}
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    Classification Report
+                </h3>
+
+                <div style="overflow:auto;">
+
+                    {{ logistic_regression.classification_report_html | safe }}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- DECISION TREE -->
+    <!-- ================================= -->
+
+    <section class="section"
+             id="decision-tree">
+
+        <div class="section-header">
+
+            <div class="section-icon">
+                🌲
+            </div>
+
+            <div>
+
+                <h2>
+                    Decision Tree Metrics
+                </h2>
+
+                <p>
+                    Statistical evaluation and regression metrics
+                    for the Decision Tree algorithm.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- DECISION TREE STATS -->
+
+        <div class="stats-bar">
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    81.5%
+                </div>
+
+                <div class="stat-label">
+                    Accuracy
+                </div>
+
+            </div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    0.82
+                </div>
+
+                <div class="stat-label">
+                    F1 Score
+                </div>
+
+            </div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    0.85
+                </div>
+
+                <div class="stat-label">
+                    R² Score
+                </div>
+
+            </div>
+
+            <div class="stat-item">
+
+                <div class="stat-value">
+                    0.18
+                </div>
+
+                <div class="stat-label">
+                    MAE
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CLASSIFICATION METRICS -->
+
+        <div class="q-grid">
+
+            <div class="q-panel">
+
+                <h3>
+                    Precision
+                </h3>
+
+                <p>
+                    Indicates the reliability of positive pest alerts
+                    generated by the Decision Tree classifier.
+                </p>
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    Accuracy
+                </h3>
+
+                <p>
+                    Represents the percentage of correct predictions
+                    over the complete dataset.
+                </p>
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    Recall
+                </h3>
+
+                <p>
+                    Measures the model’s ability to detect
+                    real pest propagation cases.
+                </p>
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    F1 Score
+                </h3>
+
+                <p>
+                    Combined balance between Precision and Recall
+                    for classification evaluation.
+                </p>
+
+            </div>
+
+        </div>
+
+        <!-- VISUALIZATIONS -->
+
+        <div class="q-grid">
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    Confusion Matrix
+                </h3>
+
+                <img src="{{ url_for(
+                    'static',
+                    filename='images/decision_tree_confusion_matrix.png'
+                ) }}"
+                     alt="Confusion Matrix"
+                     style="width:100%; border-radius:12px;">
+
+            </div>
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    ROC Curve
+                </h3>
+
+                <img src="{{ url_for(
+                    'static',
+                    filename='images/decision_tree_roc_curve.png'
+                ) }}"
+                     alt="ROC Curve"
+                     style="width:100%; border-radius:12px;">
+
+            </div>
+
+        </div>
+
+        <!-- REGRESSION -->
+
+        <div class="q-grid">
+
+            <div class="q-panel">
+
+                <h3>
+                    MAE & MSE
+                </h3>
+
+                <p>
+                    Error metrics used to evaluate prediction
+                    deviations against real agricultural values.
+                </p>
+
+            </div>
+
+            <div class="q-panel">
+
+                <h3>
+                    RMSE & R²
+                </h3>
+
+                <p>
+                    Metrics representing residual standard deviation
+                    and explained variance of the model.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- MODEL COMPARISON -->
+    <!-- ================================= -->
+
+    <section class="section"
+             id="comparison">
+
+        <div class="section-header">
+
+            <div class="section-icon">
+                📋
+            </div>
+
+            <div>
+
+                <h2>
+                    Model Comparison
+                </h2>
+
+                <p>
+                    Comparative analysis between all machine learning models.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="table-wrap">
+
+            <table class="data-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Metric
+                        </th>
+
+                        <th>
+                            Random Forest
+                        </th>
+
+                        <th>
+                            Logistic Regression
+                        </th>
+
+                        <th>
+                            Decision Tree
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr>
+
+                        <td>
+                            Accuracy
+                        </td>
+
+                        <td>
+                            {{ random_forest.accuracy }}
+                        </td>
+
+                        <td>
+                            {{ logistic_regression.accuracy }}
+                        </td>
+
+                        <td>
+                            81.5%
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            Precision
+                        </td>
+
+                        <td>
+                            {{ random_forest.precision }}
+                        </td>
+
+                        <td>
+                            {{ logistic_regression.precision }}
+                        </td>
+
+                        <td>
+                            80.2%
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            Recall
+                        </td>
+
+                        <td>
+                            {{ random_forest.recall }}
+                        </td>
+
+                        <td>
+                            {{ logistic_regression.recall }}
+                        </td>
+
+                        <td>
+                            83.1%
+                        </td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>
+                            F1 Score
+                        </td>
+
+                        <td>
+                            {{ random_forest.f1_score }}
+                        </td>
+
+                        <td>
+                            {{ logistic_regression.f1_score }}
+                        </td>
+
+                        <td>
+                            81.6%
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- FINAL MODEL -->
+    <!-- ================================= -->
+
+    <section class="section">
+
+        <div class="section-header">
+
+            <div class="section-icon">
+                ✅
+            </div>
+
+            <div>
+
+                <h2>
+                    Final Selected Model
+                </h2>
+
+                <p>
+                    Final analysis and justification for the selected model.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="q-panel">
+
+            <h3>
+                Final Evaluation
+            </h3>
+
+            <p>
+                The selected model will be determined according to
+                Accuracy, Precision, Recall, F1 Score,
+                ROC AUC, interpretability,
+                and generalization performance.
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- FOOTER -->
+    <!-- ================================= -->
+
+    <footer>
+
+        <p>
+            AgriML — Machine Learning Evaluation Module · 2026
+        </p>
+
+        <div class="footer-stack">
+
+            <span>
+                Scikit-learn
+            </span>
+
+            <span>
+                ROC-AUC
+            </span>
+
+            <span>
+                Classification Metrics
+            </span>
+
+        </div>
+
+    </footer>
 
 </body>
+
 </html>

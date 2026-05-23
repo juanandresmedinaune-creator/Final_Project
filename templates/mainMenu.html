@@ -1,87 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>AgriML — Pest Prediction</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
 </head>
+
 <body>
 
-{% include 'navbar.html' %}
+    {% include 'navbar.html' %}
 
-<section class="hero">
-    <div class="hero-tag">🌿 Machine Learning · Colombia</div>
-    <h1>Predicting <em>Agricultural Pest</em><br>Spread in Colombian Crops</h1>
-    <p>Using open climate data from IDEAM and agricultural records from ICA &amp; Agronet to build early-warning ML models.</p>
-    <div class="hero-actions">
-        <a href="/pests/objectives" class="btn-primary">View Objectives →</a>
-        <a href="/pests/objectives#data" class="btn-outline">Data Sources</a>
-    </div>
-</section>
+    <section class="hero">
+        <div class="hero-tag">🌿 Machine Learning · Colombia</div>
+        <h1>Predicting <em>Agricultural Pest</em><br>Spread in Colombian Crops</h1>
+        <p>Using open climate data from IDEAM and agricultural records from ICA &amp; Agronet to build early-warning ML
+            models.</p>
+        <div class="hero-actions">
+            <a href="/pests/objectives" class="btn-primary">View Objectives →</a>
+            <a href="/pests/objectives#data" class="btn-outline">Data Sources</a>
+        </div>
+    </section>
 
-<div class="stats-bar">
-    <div class="stat-item"><div class="stat-value">6</div><div class="stat-label">Business Objectives</div></div>
-    <div class="stat-item"><div class="stat-value">10</div><div class="stat-label">Key Questions</div></div>
-    <div class="stat-item"><div class="stat-value">5</div><div class="stat-label">Data Sources</div></div>
-    <div class="stat-item"><div class="stat-value">3</div><div class="stat-label">ML Models</div></div>
-    <div class="stat-item"><div class="stat-value">≥0.80</div><div class="stat-label">Target F1-Score</div></div>
-</div>
-
-<div class="section">
-    <div class="section-header">
-        <div class="section-icon">📋</div>
-        <div>
-            <h2>Project Modules</h2>
-            <p>Explore the main components of this ML project</p>
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value">6</div>
+            <div class="stat-label">Business Objectives</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">10</div>
+            <div class="stat-label">Key Questions</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">5</div>
+            <div class="stat-label">Data Sources</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">ML Models</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">≥0.80</div>
+            <div class="stat-label">Target F1-Score</div>
         </div>
     </div>
-    <div class="cards-grid">
-        <a href="/pests/objectives" class="menu-card">
-            <div class="card-icon">🎯</div>
-            <h3>Business Objectives</h3>
-            <p>Six concrete goals that translate agricultural needs into measurable ML targets, from reducing crop losses to deploying real-time alerts.</p>
-            <span class="card-arrow">Explore →</span>
-        </a>
-        <a href="/pests/objectives#questions" class="menu-card">
-            <div class="card-icon">❓</div>
-            <h3>Key Questions</h3>
-            <p>Specific questions the model must answer about pest probability, climate thresholds, spatial spread, and data quality.</p>
-            <span class="card-arrow">Explore →</span>
-        </a>
-        <a href="/pests/objectives#data" class="menu-card">
-            <div class="card-icon">📡</div>
-            <h3>Open Data Sources</h3>
-            <p>IDEAM, ICA, Agronet, Ministry of Agriculture, and NASA POWER as the foundation for training and validating the model.</p>
-            <span class="card-arrow">Explore →</span>
-        </a>
-        <a href="/pests/dataEngineering" class="menu-card">
-            <div class="card-icon">⚙️</div>
-            <h3>Data Engineering</h3>
-            <p>Data preprocessing, feature engineering, normalization, encoding, and transformation pipeline applied before machine learning training.</p>
-            <span class="card-arrow">Explore →</span>
-        </a>
-        <a href="/models/engineering" class="menu-card">
-            <div class="card-icon">🔧</div>
-            <h3>Model Engineering</h3>
-            <p>Comparative table of the three ML models: accuracy, F1-score, cross-validation results, and model summaries side by side.</p>
-            <span class="card-arrow">Explore →</span>
-        </a>
-        <a href="/models/development/random-forest" class="menu-card">
-            <div class="card-icon">🧪</div>
-            <h3>Model Development</h3>
-            <p>Step-by-step development of Random Forest, Logistic Regression, and Gradient Boosting with training charts and prediction examples.</p>
-            <span class="card-arrow">Explore →</span>
-        </a>
-    </div>
-</div>
 
-<footer>
-    <p>AgriML — Agricultural Pest Prediction · Colombia</p>
-    <div class="footer-stack">
-        <span>Python</span><span>Flask</span>
-        <span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
+    <div class="section">
+        <div class="section-header">
+            <div class="section-icon">📋</div>
+            <div>
+                <h2>Project Modules</h2>
+                <p>Explore the main components of this ML project</p>
+            </div>
+        </div>
+        <div class="cards-grid">
+            <a href="/pests/objectives" class="menu-card">
+                <div class="card-icon">🎯</div>
+                <h3>Business Objectives</h3>
+                <p>Six concrete goals that translate agricultural needs into measurable ML targets, from reducing crop
+                    losses to deploying real-time alerts.</p>
+                <span class="card-arrow">Explore →</span>
+            </a>
+            <a href="/pests/objectives#questions" class="menu-card">
+                <div class="card-icon">❓</div>
+                <h3>Key Questions</h3>
+                <p>Specific questions the model must answer about pest probability, climate thresholds, spatial spread,
+                    and data quality.</p>
+                <span class="card-arrow">Explore →</span>
+            </a>
+            <a href="/pests/objectives#data" class="menu-card">
+                <div class="card-icon">📡</div>
+                <h3>Open Data Sources</h3>
+                <p>IDEAM, ICA, Agronet, Ministry of Agriculture, and NASA POWER as the foundation for training and
+                    validating the model.</p>
+                <span class="card-arrow">Explore →</span>
+            </a>
+            <a href="/pests/dataEngineering" class="menu-card">
+                <div class="card-icon">⚙️</div>
+                <h3>Data Engineering</h3>
+                <p>Data preprocessing, feature engineering, normalization, encoding, and transformation pipeline applied
+                    before machine learning training.</p>
+                <span class="card-arrow">Explore →</span>
+            </a>
+            <a href="/models/engineering" class="menu-card">
+                <div class="card-icon">🔧</div>
+                <h3>Model Engineering</h3>
+                <p>Comparative table of the three ML models: accuracy, F1-score, cross-validation results, and model
+                    summaries side by side.</p>
+                <span class="card-arrow">Explore →</span>
+            </a>
+            <a href="/models/development/random-forest" class="menu-card">
+                <div class="card-icon">🧪</div>
+                <h3>Model Development</h3>
+                <p>Step-by-step development of Random Forest, Logistic Regression, and Gradient Boosting with training
+                    charts and prediction examples.</p>
+                <span class="card-arrow">Explore →</span>
+            </a>
+            <a href="/models/evaluation" class="menu-card">
+
+                <div class="card-icon">📊</div>
+
+                <h3>Model Evaluation</h3>
+
+                <p>
+                    Comparative evaluation of Random Forest, Logistic Regression,
+                    Decision Tree, and Gradient Boosting using accuracy,
+                    precision, recall, F1-score, ROC curve, confusion matrix,
+                    and performance analysis dashboards.
+                </p>
+
+                <span class="card-arrow">
+                    Explore →
+                </span>
+
+            </a>
+        </div>
     </div>
-</footer>
+
+    <footer>
+        <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+        <div class="footer-stack">
+            <span>Python</span><span>Flask</span>
+            <span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
+        </div>
+    </footer>
 
 </body>
+
 </html>
