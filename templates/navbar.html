@@ -1,0 +1,19 @@
+<nav class="navbar">
+    <a href="/" class="navbar-brand"><span></span> AgriML</a>
+
+    <div class="navbar-links">
+        <a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a>
+
+        <a href="/pests/objectives" class="{% if '/pests/objectives' in request.path %}active{% endif %}">Objectives</a>
+
+        <a href="/pests/objectives#questions" class="{% if '/pests/objectives' in request.path %}active{% endif %}">Key Questions</a>
+
+        <a href="/pests/objectives#data" class="{% if '/pests/objectives' in request.path %}active{% endif %}">Data Sources</a>
+
+        <a href="/pests/dataEngineering" class="{% if '/pests/dataEngineering' in request.path %}active{% endif %}">Data Engineering</a>
+
+        <a href="/pests/modelEngineering" class="{% if '/pests/modelEngineering' in request.path %}active{% endif %}">Model Engineering</a>
+
+        <a href="/models/development/decision-tree" class="{% if '/models/development/decision-tree' in request.path %}active{% endif %}">Decision Tree</a>
+    </div>
+</nav>

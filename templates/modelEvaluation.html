@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Evaluación – Logistic Regression</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #01696f;
+      --primary-light: #cedcd8;
+      --surface: #f7f6f2;
+      --card-bg: #ffffff;
+      --text-muted-custom: #6c757d;
+    }
+    body { background-color: var(--surface); font-family: 'Segoe UI', sans-serif; }
+
+    .eval-header {
+      background: linear-gradient(135deg, var(--primary) 0%, #0c4e54 100%);
+      color: #fff;
+      padding: 2.5rem 0 2rem;
+      margin-bottom: 2rem;
+    }
+    .eval-header h1 { font-size: 2rem; font-weight: 700; }
+    .eval-header p  { opacity: .85; font-size: 1rem; max-width: 640px; }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      border-left: 4px solid var(--primary);
+      padding-left: .75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .metric-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      transition: transform .2s, box-shadow .2s;
+      height: 100%;
+    }
+    .metric-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+    .metric-card .metric-label {
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted-custom);
+      margin-bottom: .4rem;
+    }
+    .metric-card .metric-value {
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--primary);
+      line-height: 1;
+    }
+    .metric-card .metric-badge {
+      display: inline-block;
+      margin-top: .5rem;
+      font-size: .68rem;
+      padding: .2rem .55rem;
+      border-radius: 20px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .chart-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+      height: 100%;
+    }
+    .chart-card img { max-width: 100%; border-radius: 8px; }
+    .chart-card h6 {
+      font-weight: 700;
+      font-size: .82rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,.07);
+    }
+    .info-card table { font-size: .85rem; }
+
+    .best-model-banner {
+      background: linear-gradient(135deg, #437a22 0%, #2e5c10 100%);
+      color: #fff;
+      border-radius: 12px;
+      padding: 1.75rem 2rem;
+      box-shadow: 0 4px 16px rgba(67,122,34,.3);
+    }
+    .best-model-banner h4 { font-weight: 800; font-size: 1.35rem; }
+    .best-model-banner p  { opacity: .92; margin-bottom: 0; }
+
+    section { margin-bottom: 3rem; }
+    .container { max-width: 1100px; }
+  </style>
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<!-- PAGE HEADER -->
+<div class="eval-header">
+  <div class="container">
+    <h1>📊 Panel de Evaluación</h1>
+    <p>{{ model.name }} — métricas completas de clasificación, visualizaciones y análisis comparativo</p>
+    {% if model.error %}
+    <div class="alert alert-warning mt-3">⚠️ Error: {{ model.error }}</div>
+    {% endif %}
+  </div>
+</div>
+
+<div class="container pb-5">
+
+  <!-- 1. DATASET INFO -->
+  <section id="dataset-info">
+    <div class="section-title">1. Información del Dataset</div>
+    <div class="row g-3">
+      <div class="col-6 col-md-3">
+        <div class="metric-card">
+          <div class="metric-label">Train samples</div>
+          <div class="metric-value">{{ model.train_size }}</div>
+          <span class="metric-badge">80 %</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="metric-card">
+          <div class="metric-label">Test samples</div>
+          <div class="metric-value">{{ model.test_size }}</div>
+          <span class="metric-badge">20 %</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="metric-card">
+          <div class="metric-label">Features</div>
+          <div class="metric-value">{{ model.n_features }}</div>
+          <span class="metric-badge">variables</span>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="metric-card">
+          <div class="metric-label">Clases</div>
+          <div class="metric-value">{{ model.n_classes }}</div>
+          <span class="metric-badge">output</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. MÉTRICAS DE CLASIFICACIÓN -->
+  <section id="classification-metrics">
+    <div class="section-title">2. Métricas de Clasificación</div>
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md">
+        <div class="metric-card">
+          <div class="metric-label">Accuracy</div>
+          <div class="metric-value text-success">{{ model.accuracy }}</div>
+          <span class="metric-badge">Exactitud</span>
+        </div>
+      </div>
+      <div class="col-6 col-md">
+        <div class="metric-card">
+          <div class="metric-label">Precision</div>
+          <div class="metric-value" style="color:#2196F3">{{ model.precision }}</div>
+          <span class="metric-badge">TP / TP+FP</span>
+        </div>
+      </div>
+      <div class="col-6 col-md">
+        <div class="metric-card">
+          <div class="metric-label">Recall</div>
+          <div class="metric-value" style="color:#FF9800">{{ model.recall }}</div>
+          <span class="metric-badge">Exhaustividad</span>
+        </div>
+      </div>
+      <div class="col-6 col-md">
+        <div class="metric-card">
+          <div class="metric-label">F1 Score</div>
+          <div class="metric-value" style="color:#9C27B0">{{ model.f1_score }}</div>
+          <span class="metric-badge">2·P·R / P+R</span>
+        </div>
+      </div>
+      <div class="col-6 col-md">
+        <div class="metric-card">
+          <div class="metric-label">ROC AUC</div>
+          <div class="metric-value" style="color:#E91E63">{{ model.roc_auc }}</div>
+          <span class="metric-badge">Área ROC</span>
+        </div>
+      </div>
+    </div>
+    {% if model.metrics_bar_b64 %}
+    <div class="chart-card">
+      <h6>Comparación Visual de Métricas</h6>
+      <img src="data:image/png;base64,{{ model.metrics_bar_b64 }}" alt="Metrics bar chart" loading="lazy" />
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- 3. MATRIZ DE CONFUSIÓN & ROC -->
+  <section id="confusion-roc">
+    <div class="section-title">3. Matriz de Confusión y Curva ROC</div>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <div class="chart-card">
+          <h6>Matriz de Confusión</h6>
+          {% if model.confusion_b64 %}
+          <img src="data:image/png;base64,{{ model.confusion_b64 }}" alt="Confusion Matrix" loading="lazy" />
+          {% else %}
+          <p class="text-muted small">No disponible</p>
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="chart-card">
+          <h6>Curva ROC</h6>
+          {% if model.roc_b64 %}
+          <img src="data:image/png;base64,{{ model.roc_b64 }}" alt="ROC Curve" loading="lazy" />
+          {% else %}
+          <p class="text-muted small">No disponible</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. REPORTE POR CLASE -->
+  <section id="classification-report">
+    <div class="section-title">4. Reporte Detallado por Clase</div>
+    <div class="info-card">
+      <p class="text-muted small mb-3">Precision, Recall, F1-Score y Support por cada clase del target.</p>
+      {% if model.classification_report_html %}
+        {{ model.classification_report_html | safe }}
+      {% else %}
+        <p class="text-muted">No disponible</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- 5. VALIDACIÓN CRUZADA -->
+  <section id="cross-validation">
+    <div class="section-title">5. Validación Cruzada (5-Fold)</div>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <div class="metric-card">
+          <div class="metric-label">CV F1 Mean</div>
+          <div class="metric-value">{{ model.cv_mean }}</div>
+          <span class="metric-badge">promedio 5 folds</span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="metric-card">
+          <div class="metric-label">CV F1 Std</div>
+          <div class="metric-value">{{ model.cv_std }}</div>
+          <span class="metric-badge">desviación</span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="info-card h-100">
+          <p class="fw-bold mb-2" style="color:var(--primary); font-size:.85rem;">Scores por Fold</p>
+          <ul class="list-unstyled mb-0">
+            {% for s in model.cv_scores %}
+            <li><span class="badge bg-secondary me-1">Fold {{ loop.index }}</span>{{ '%.4f' % s }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+    {% if model.cv_b64 %}
+    <div class="chart-card mt-3">
+      <h6>Evolución del F1 por Fold</h6>
+      <img src="data:image/png;base64,{{ model.cv_b64 }}" alt="CV F1" loading="lazy" />
+    </div>
+    {% endif %}
+  </section>
+
+  <!-- 6. FEATURE IMPORTANCE -->
+  <section id="feature-importance">
+    <div class="section-title">6. Importancia de Variables (Coeficientes)</div>
+    <div class="row g-3">
+      <div class="col-md-8">
+        <div class="chart-card">
+          <h6>Top 10 Variables por Magnitud de Coeficiente</h6>
+          {% if model.importance_b64 %}
+          <img src="data:image/png;base64,{{ model.importance_b64 }}" alt="Feature Importance" loading="lazy" />
+          {% endif %}
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="chart-card">
+          <h6>Distribución de Clases Predichas</h6>
+          {% if model.dist_b64 %}
+          <img src="data:image/png;base64,{{ model.dist_b64 }}" alt="Predicted Distribution" loading="lazy" />
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. ANÁLISIS COMPARATIVO -->
+  <section id="comparative-analysis">
+    <div class="section-title">7. Análisis Comparativo de Métricas</div>
+    <div class="info-card">
+      <p class="mb-3 text-muted small">
+        Completa las columnas RF y GB con los resultados de tus compañeros para comparar los tres modelos.
+      </p>
+      <div class="table-responsive">
+        <table class="table table-bordered table-hover text-center align-middle">
+          <thead class="table-dark">
+            <tr>
+              <th>Métrica</th>
+              <th>Logistic Regression ✅</th>
+              <th>Random Forest</th>
+              <th>Gradient Boosting</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Accuracy</strong></td><td class="table-success fw-bold">{{ model.accuracy }}</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+            <tr><td><strong>Precision</strong></td><td class="table-success fw-bold">{{ model.precision }}</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+            <tr><td><strong>Recall</strong></td><td class="table-success fw-bold">{{ model.recall }}</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+            <tr><td><strong>F1 Score</strong></td><td class="table-success fw-bold">{{ model.f1_score }}</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+            <tr><td><strong>ROC AUC</strong></td><td class="table-success fw-bold">{{ model.roc_auc }}</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+            <tr><td><strong>CV F1 Mean</strong></td><td class="table-success fw-bold">{{ model.cv_mean }} ± {{ model.cv_std }}</td><td class="text-muted">—</td><td class="text-muted">—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. MODELO FINAL -->
+  <section id="final-model">
+    <div class="section-title">8. Modelo Final Seleccionado — Justificación</div>
+    <div class="best-model-banner mb-3">
+      <h4>✅ Logistic Regression — Modelo de Referencia</h4>
+      <p>
+        Logistic Regression ofrece alta interpretabilidad, entrenamiento eficiente y buen rendimiento
+        para clasificación de alertas de plagas con variables normalizadas.<br />
+        <strong>Criterio de selección:</strong> si la diferencia de F1 y ROC AUC frente a RF y GB es &lt; 2 pp,
+        LR es preferible por su simplicidad y menor riesgo de sobreajuste.
+      </p>
+    </div>
+    <div class="info-card">
+      <p class="section-title">Justificación Técnica</p>
+      <ul>
+        <li><strong>Interpretabilidad:</strong> coeficientes directamente legibles.</li>
+        <li><strong>Eficiencia:</strong> <code>max_iter=500</code>, escala con más datos.</li>
+        <li><strong>Regularización L2:</strong> <code>C=1.0</code> reduce sobreajuste.</li>
+        <li><strong>Balanceo:</strong> <code>class_weight='balanced'</code> corrige desbalance del dataset.</li>
+        <li><strong>ROC AUC sólido:</strong> alta capacidad discriminativa entre clases.</li>
+        <li><strong>CV estable:</strong> baja std en 5-fold indica buena generalización.</li>
+      </ul>
+      <p class="section-title mt-4">Parámetros del Modelo Final</p>
+      <table class="table table-sm table-striped">
+        <thead><tr><th>Parámetro</th><th>Valor</th></tr></thead>
+        <tbody>
+          {% for k, v in model.hyperparams.items() %}
+          <tr><td><code>{{ k }}</code></td><td>{{ v }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 9. MUESTRA DE PREDICCIONES -->
+  <section id="predictions-sample">
+    <div class="section-title">9. Muestra de Predicciones (5 ejemplos)</div>
+    <div class="info-card">
+      {{ model.predictions_html | safe }}
+    </div>
+  </section>
+
+  <!-- Botones de navegación -->
+  <div class="d-flex flex-wrap gap-3 mt-4 pb-4">
+    <a href="/models/development/logistic-regression" class="btn btn-outline-secondary">← Desarrollo del Modelo</a>
+    <a href="/models/engineering" class="btn btn-outline-secondary">← Model Engineering</a>
+    <a href="/" class="btn text-white" style="background:var(--primary)">🏠 Inicio</a>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
