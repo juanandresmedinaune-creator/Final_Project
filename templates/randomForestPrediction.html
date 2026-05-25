@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Forest Prediction — AgriML</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='pests.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+
+    {% include 'navbar.html' %}
+
+    <section class="hero">
+        <div class="hero-tag">Prediction System</div>
+        <h1>Random Forest <em>Prediction</em></h1>
+        <p>A practical Flask interface for manual input, prediction requests, and classification results using the trained Random Forest model.</p>
+    </section>
+
+    <div class="stats-bar">
+        <div class="stat-item">
+            <div class="stat-value">Manual</div>
+            <div class="stat-label">Input Form</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">POST</div>
+            <div class="stat-label">Prediction Request</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">RF</div>
+            <div class="stat-label">Model</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-value">Prob.</div>
+            <div class="stat-label">Confidence Output</div>
+        </div>
+    </div>
+
+    <section class="section" id="business-understanding">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-briefcase"></i></div>
+            <div>
+                <h2>Business Understanding</h2>
+                <p>This system supports agricultural decision-making by helping identify pest risk conditions before outbreaks escalate.</p>
+            </div>
+        </div>
+
+        <div class="q-grid">
+            <div class="q-panel">
+                <h3>Problem to Solve</h3>
+                <p>Farmers and agronomists need a practical way to estimate pest risk from environmental and production variables without waiting for manual inspection or delayed field reports.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Expected Impact</h3>
+                <p>The application reduces uncertainty, improves preventive action, and supports faster responses when climate conditions suggest a high risk of infestation.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Users of the System</h3>
+                <p>The interface is designed for agricultural technicians, researchers, and decision-makers who need a simple tool to classify new cases using model predictions.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Practical Goal</h3>
+                <p>The main goal is to convert a trained machine learning model into a usable web tool with an intuitive interface and clear prediction output.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="data-understanding">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-database"></i></div>
+            <div>
+                <h2>Data Understanding</h2>
+                <p>The model relies on structured agricultural and climate variables that describe local conditions before prediction.</p>
+            </div>
+        </div>
+
+        <div class="q-grid">
+            <div class="q-panel">
+                <h3>Main Inputs</h3>
+                <p>The prediction form captures features such as average temperature, total precipitation, relative yield, and municipality to build the input vector required by the Random Forest model.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Feature Role</h3>
+                <p>Temperature and precipitation provide climate context, while location and yield-related variables add agricultural structure to the classification process.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Data Preparation</h3>
+                <p>Before reaching this interface, the data should already have been cleaned, encoded, and prepared using the preprocessing steps applied during model engineering.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Input Validation</h3>
+                <p>The form expects numeric values where needed and helps avoid invalid requests that could break the prediction workflow in the backend.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="model-engineering">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-gear"></i></div>
+            <div>
+                <h2>Model Engineering</h2>
+                <p>The Random Forest model combines multiple decision trees to improve stability and reduce overfitting.</p>
+            </div>
+        </div>
+
+        <div class="q-grid">
+            <div class="q-panel">
+                <h3>Why Random Forest</h3>
+                <p>Random Forest is useful for tabular data because it handles non-linear relationships well and usually performs better than a single tree on noisy real-world datasets.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Prediction Behavior</h3>
+                <p>The model aggregates the results of many trees to produce a final class, which makes the classification more robust than using one isolated rule path.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Probability Output</h3>
+                <p>If the model supports <strong>predict_proba</strong>, the application can also show confidence percentages, which makes the result easier to interpret for end users.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Backend Role</h3>
+                <p>The Flask route receives the values from the form, formats them as features, sends them to the model, and returns the prediction to the template.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="evaluation">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-bar-chart-line"></i></div>
+            <div>
+                <h2>Model Evaluation</h2>
+                <p>Evaluation explains how well the model behaves and why its output can be trusted for practical use.</p>
+            </div>
+        </div>
+
+        <div class="q-grid">
+            <div class="q-panel">
+                <h3>Classification Output</h3>
+                <p>The system can return class labels such as <strong>Alert</strong> or <strong>No Alert</strong>, depending on the target encoding used during training.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Confidence Measure</h3>
+                <p>When probabilities are available, the model can show how confident it is in the predicted class, which helps users interpret uncertain predictions.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Error Handling</h3>
+                <p>If the backend receives incomplete or invalid values, the app can catch the exception and display a user-friendly message instead of crashing.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Deployment Value</h3>
+                <p>This evaluation stage connects the analytical model with the final user experience, turning a trained algorithm into an operational decision-support tool.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="prediction-form">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-ui-checks"></i></div>
+            <div>
+                <h2>Manual Prediction Input</h2>
+                <p>Enter the required variables manually to obtain a pest risk classification from the Random Forest model.</p>
+            </div>
+        </div>
+
+        <div class="q-grid">
+            <div class="q-panel">
+                <h3>Input Requirements</h3>
+                <p>This interface allows users to introduce data manually, submit a prediction request, and receive a classification result directly in the browser.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Backend Workflow</h3>
+                <p>The Flask backend receives the form data, prepares the feature vector, calls the trained model, and returns the predicted class and confidence score.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Error Handling</h3>
+                <p>If any value is invalid or missing, the system can display a clear message so the user knows what needs to be corrected before retrying.</p>
+            </div>
+            <div class="q-panel">
+                <h3>Output Display</h3>
+                <p>The prediction result can be shown as a label such as <strong>Alert</strong> or <strong>No Alert</strong>, along with the probability of the predicted class.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="prediction-system">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-pencil-square"></i></div>
+            <div>
+                <h2>Prediction Form</h2>
+                <p>Fill in the variables used by the model to generate a classification.</p>
+            </div>
+        </div>
+
+        <div class="obj-card">
+            <form method="POST" action="{{ url_for('view_random_forest_prediction') }}">
+                <div class="cards-grid">
+                    <div class="input-group">
+                        <label for="avg_temperature">Average Temperature</label>
+                        <input type="number" step="any" id="avg_temperature" name="avg_temperature" class="form-input" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="total_precipitation">Total Precipitation</label>
+                        <input type="number" step="any" id="total_precipitation" name="total_precipitation" class="form-input" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="relative_yield">Relative Yield</label>
+                        <input type="number" step="any" id="relative_yield" name="relative_yield" class="form-input" required>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="municipality">Municipality</label>
+                        <input type="text" id="municipality" name="municipality" class="form-input" required>
+                    </div>
+                </div>
+
+                <div style="margin-top: 24px;">
+                    <button type="submit" class="btn-primary">Predict</button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    {% if prediction is defined %}
+    <section class="section" id="prediction-result">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-graph-up-arrow"></i></div>
+            <div>
+                <h2>Prediction Result</h2>
+                <p>Model output and confidence details.</p>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <div class="obj-card">
+                <div class="obj-num">Classification</div>
+                <h3>{{ prediction }}</h3>
+                <p>The Random Forest model generated this classification from the input values.</p>
+            </div>
+
+            <div class="obj-card">
+                <div class="obj-num">Confidence</div>
+                <h3>{{ confidence }}%</h3>
+                <p>Estimated probability of the predicted class, when available from the model.</p>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if probabilities %}
+    <section class="section" id="prediction-probabilities">
+        <div class="section-header">
+            <div class="section-icon"><i class="bi bi-bar-chart-line"></i></div>
+            <div>
+                <h2>Prediction Probabilities</h2>
+                <p>Class probability distribution returned by the model.</p>
+            </div>
+        </div>
+
+        <div class="table-wrap">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Class</th>
+                        <th>Probability</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in probabilities %}
+                    <tr>
+                        <td><strong>{{ item.label }}</strong></td>
+                        <td>{{ item.value }}%</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+    {% endif %}
+
+    {% if error %}
+    <section class="section" id="error-message">
+        <div class="obj-card">
+            <div class="obj-num">Error</div>
+            <h3>Prediction could not be completed</h3>
+            <p>{{ error }}</p>
+        </div>
+    </section>
+    {% endif %}
+
+    <footer>
+        <p>AgriML — Random Forest Prediction Module · 2026</p>
+        <div class="footer-stack">
+            <span>Flask Forms</span><span>Random Forest</span><span>Model Confidence</span>
+        </div>
+    </footer>
+
+</body>
+</html>

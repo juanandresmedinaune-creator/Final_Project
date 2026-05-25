@@ -67,6 +67,10 @@ def model_evaluation():
     decision_tree=decisionTree
     )
 
+@app.route('/models/prediction/random-forest')
+def view_random_forest_prediction():
+    return render_template('randomForestPrediction.html')
+
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
