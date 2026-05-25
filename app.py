@@ -1,6 +1,6 @@
 from flask import Flask, render_template
 import pandas as pd
-import logisticRegression,decisionTree
+import logisticRegression,decisionTree, os
 
 app = Flask(__name__)
 
@@ -67,9 +67,9 @@ def model_evaluation():
     decision_tree=decisionTree
     )
 
-@app.route('/models/prediction/random-forest')
+@app.route('/pests/systemPrediction')
 def view_random_forest_prediction():
-    return render_template('randomForestPrediction.html')
+    return render_template('systemPrediction.html')
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
