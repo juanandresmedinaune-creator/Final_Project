@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 import pandas as pd
 import logisticRegression,decisionTree, os
+from logisticRegression import run_logistic_regression
 
 app = Flask(__name__)
 
@@ -40,6 +41,8 @@ def model_engineering():
 @app.route('/pests/modelEvaluation')
 def model_evaluation():
 
+    logistic_regression = run_logistic_regression()
+
     random_forest = {
 
         "accuracy": "0.91",
@@ -60,11 +63,32 @@ def model_evaluation():
 
     }
 
+    decision_tree = {
+
+        "accuracy": "0.84",
+        "precision": "0.83",
+        "recall": "0.82",
+        "f1_score": "0.82",
+
+        "train_size": 1285,
+        "test_size": 322,
+        "n_features": 14,
+        "n_classes": 2,
+
+        "hyperparams": {
+            "criterion": "gini",
+            "max_depth": 5,
+            "random_state": 42,
+            "class_weight": "balanced"
+
+        }
+    }
+
     return render_template(
         'modelEvaluation.html',
         random_forest=random_forest,
-    logistic_regression=logisticRegression,
-    decision_tree=decisionTree
+        logistic_regression=logistic_regression,
+        decision_tree=decision_tree
     )
 
 @app.route('/pests/systemPrediction')

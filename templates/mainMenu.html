@@ -11,84 +11,223 @@
 
     {% include 'navbar.html' %}
 
+    <!-- HERO -->
     <section class="hero">
         <div class="hero-tag">🌿 Machine Learning · Colombia</div>
-        <h1>Predicting <em>Agricultural Pest</em><br>Spread in Colombian Crops</h1>
-        <p>Using open climate data from IDEAM and agricultural records from ICA &amp; Agronet to build early-warning ML
-            models.</p>
+
+        <h1>
+            Predicting <em>Agricultural Pest</em><br>
+            Spread in Colombian Crops
+        </h1>
+
+        <p>
+            Intelligent agricultural prediction platform powered by Machine Learning
+            and climate analysis to identify pest risks in Colombian crops using
+            environmental and agricultural datasets.
+        </p>
+
         <div class="hero-actions">
-            <a href="/pests/objectives" class="btn-primary">View Objectives →</a>
-            <a href="/pests/objectives#data" class="btn-outline">Data Sources</a>
+            <a href="/pests/objectives" class="btn-primary">
+                Explore Project →
+            </a>
+
+            <a href="/pests/systemPrediction" class="btn-outline">
+                Prediction System
+            </a>
         </div>
     </section>
 
+    <!-- STATS -->
     <div class="stats-bar">
+
         <div class="stat-item">
             <div class="stat-value">6</div>
-            <div class="stat-label">Business Objectives</div>
+            <div class="stat-label">CRISP-ML Phases</div>
         </div>
+
         <div class="stat-item">
-            <div class="stat-value">10</div>
-            <div class="stat-label">Key Questions</div>
+            <div class="stat-value">1000+</div>
+            <div class="stat-label">Dataset Records</div>
         </div>
-        <div class="stat-item">
-            <div class="stat-value">5</div>
-            <div class="stat-label">Data Sources</div>
-        </div>
+
         <div class="stat-item">
             <div class="stat-value">3</div>
             <div class="stat-label">ML Models</div>
         </div>
+
         <div class="stat-item">
-            <div class="stat-value">≥0.80</div>
-            <div class="stat-label">Target F1-Score</div>
+            <div class="stat-value">5+</div>
+            <div class="stat-label">Evaluation Metrics</div>
         </div>
+
+        <div class="stat-item">
+            <div class="stat-value">RF</div>
+            <div class="stat-label">Best Model</div>
+        </div>
+
     </div>
 
+    <!-- PROJECT MODULES -->
     <div class="section">
+
         <div class="section-header">
             <div class="section-icon">📋</div>
+
             <div>
                 <h2>Project Modules</h2>
-                <p>Explore the main components of this ML project</p>
+                <p>
+                    Explore every phase of the Machine Learning lifecycle
+                    implemented using the CRISP-ML methodology.
+                </p>
             </div>
         </div>
+
         <div class="cards-grid">
+
+            <!-- CRISP ML -->
+            <div class="menu-card static-card">
+
+                <div class="card-icon">🧠</div>
+
+                <h3>CRISP-ML Methodology</h3>
+
+                <p>
+                    This project follows the complete CRISP-ML process
+                    from business analysis to deployment of a real-time
+                    pest prediction system.
+                </p>
+
+                <div class="card-details">
+
+                    <div class="detail-item">
+                        <span>🎯</span>
+                        <p>
+                            Business Understanding and agricultural analysis.
+                        </p>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>📊</span>
+                        <p>
+                            Data exploration, visualization, and quality analysis.
+                        </p>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>⚙️</span>
+                        <p>
+                            Data preprocessing and feature engineering pipeline.
+                        </p>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>🧪</span>
+                        <p>
+                            Training Random Forest, Decision Tree,
+                            and Logistic Regression models.
+                        </p>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>📈</span>
+                        <p>
+                            Model evaluation using classification metrics
+                            and visual dashboards.
+                        </p>
+                    </div>
+
+                    <div class="detail-item">
+                        <span>🌱</span>
+                        <p>
+                            Final prediction system for agricultural pest alerts.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="card-footer">
+                    Complete Machine Learning lifecycle integrated into Flask
+                </div>
+
+            </div>
+
+            <!-- BUSINESS UNDERSTANDING -->
             <a href="/pests/objectives" class="menu-card">
+
                 <div class="card-icon">🎯</div>
-                <h3>Business Objectives</h3>
-                <p>Six concrete goals that translate agricultural needs into measurable ML targets, from reducing crop
-                    losses to deploying real-time alerts.</p>
-                <span class="card-arrow">Explore →</span>
+
+                <h3>Business Understanding</h3>
+
+                <p>
+                    Agricultural problem analysis, business objectives,
+                    project feasibility, risks, expected impact,
+                    and real-world justification for pest prediction.
+                </p>
+
+                <span class="card-arrow">
+                    Explore →
+                </span>
+
             </a>
-            <a href="/pests/objectives#questions" class="menu-card">
-                <div class="card-icon">❓</div>
-                <h3>Key Questions</h3>
-                <p>Specific questions the model must answer about pest probability, climate thresholds, spatial spread,
-                    and data quality.</p>
-                <span class="card-arrow">Explore →</span>
-            </a>
+
+            <!-- DATA UNDERSTANDING -->
             <a href="/pests/objectives#data" class="menu-card">
+
                 <div class="card-icon">📡</div>
-                <h3>Open Data Sources</h3>
-                <p>IDEAM, ICA, Agronet, Ministry of Agriculture, and NASA POWER as the foundation for training and
-                    validating the model.</p>
-                <span class="card-arrow">Explore →</span>
+
+                <h3>Data Understanding</h3>
+
+                <p>
+                    Exploratory Data Analysis (EDA), dataset exploration,
+                    statistical summaries, missing values,
+                    correlations, and variable analysis.
+                </p>
+
+                <span class="card-arrow">
+                    Explore →
+                </span>
+
             </a>
+
+            <!-- DATA ENGINEERING -->
             <a href="/pests/dataEngineering" class="menu-card">
+
                 <div class="card-icon">⚙️</div>
+
                 <h3>Data Engineering</h3>
-                <p>Data preprocessing, feature engineering, normalization, encoding, and transformation pipeline applied
-                    before machine learning training.</p>
-                <span class="card-arrow">Explore →</span>
+
+                <p>
+                    Data cleaning, encoding, normalization,
+                    feature engineering, preprocessing pipelines,
+                    and transformation processes applied before training.
+                </p>
+
+                <span class="card-arrow">
+                    Explore →
+                </span>
+
             </a>
+
+            <!-- MODEL ENGINEERING -->
             <a href="/pests/modelEngineering" class="menu-card">
+
                 <div class="card-icon">🔧</div>
+
                 <h3>Model Engineering</h3>
-                <p>Comparative table of the three ML models: accuracy, F1-score, cross-validation results, and model
-                    summaries side by side.</p>
-                <span class="card-arrow">Explore →</span>
+
+                <p>
+                    Development and training of Random Forest,
+                    Logistic Regression, and Decision Tree models
+                    including hyperparameter tuning and validation.
+                </p>
+
+                <span class="card-arrow">
+                    Explore →
+                </span>
+
             </a>
+
+            <!-- MODEL EVALUATION -->
             <a href="/pests/modelEvaluation" class="menu-card">
 
                 <div class="card-icon">📊</div>
@@ -96,10 +235,10 @@
                 <h3>Model Evaluation</h3>
 
                 <p>
-                    Comparative evaluation of Random Forest, Logistic Regression,
-                    Decision Tree, and Gradient Boosting using accuracy,
-                    precision, recall, F1-score, ROC curve, confusion matrix,
-                    and performance analysis dashboards.
+                    Comparative evaluation dashboards with Accuracy,
+                    Precision, Recall, F1-Score, ROC Curve,
+                    Confusion Matrix, cross-validation,
+                    and performance comparison analysis.
                 </p>
 
                 <span class="card-arrow">
@@ -107,28 +246,46 @@
                 </span>
 
             </a>
+
+            <!-- PREDICTION SYSTEM -->
             <a href="/pests/systemPrediction" class="menu-card">
+
                 <div class="card-icon">🌱</div>
-                <h3>Pest Prediction System</h3>
+
+                <h3>Prediction System</h3>
+
                 <p>
-                    Intelligent agricultural pest prediction system developed with
-                    Random Forest using climatic variables, crop information,
-                    precipitation, temperature, and agricultural records to identify
-                    possible pest alerts in Colombian crops.
+                    Interactive prediction interface powered by
+                    Random Forest that allows users to input
+                    climatic and agricultural variables
+                    and receive pest risk predictions in real time.
                 </p>
+
                 <span class="card-arrow">
                     Explore →
                 </span>
+
             </a>
+
         </div>
     </div>
 
+    <!-- FOOTER -->
     <footer>
-        <p>AgriML — Agricultural Pest Prediction · Colombia</p>
+
+        <p>
+            AgriML — Agricultural Pest Prediction System · Colombia
+        </p>
+
         <div class="footer-stack">
-            <span>Python</span><span>Flask</span>
-            <span>scikit-learn</span><span>pandas</span><span>matplotlib</span>
+            <span>Python</span>
+            <span>Flask</span>
+            <span>scikit-learn</span>
+            <span>pandas</span>
+            <span>matplotlib</span>
+            <span>Random Forest</span>
         </div>
+
     </footer>
 
 </body>

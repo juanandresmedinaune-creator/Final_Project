@@ -79,7 +79,7 @@
     </section>
 
     <!-- ================================= -->
-    <!-- STATS -->
+    <!-- GENERAL STATS -->
     <!-- ================================= -->
 
     <div class="stats-bar">
@@ -216,7 +216,7 @@
 
         </div>
 
-        <!-- CLASSIFICATION -->
+        <!-- EXPLANATION -->
 
         <div class="q-grid">
 
@@ -285,13 +285,12 @@
                     Confusion Matrix
                 </h3>
 
-                {% if random_forest.confusion_b64 %}
-
-                <img src="data:image/png;base64,{{ random_forest.confusion_b64 }}"
+                <img src="{{ url_for(
+                    'static',
+                    filename='images/random_forest_confusion.png'
+                ) }}"
                      alt="Random Forest Confusion Matrix"
                      style="width:100%; border-radius:12px;">
-
-                {% endif %}
 
             </div>
 
@@ -302,13 +301,12 @@
                     ROC Curve
                 </h3>
 
-                {% if random_forest.roc_b64 %}
-
-                <img src="data:image/png;base64,{{ random_forest.roc_b64 }}"
+                <img src="{{ url_for(
+                    'static',
+                    filename='images/random_forest_roc.png'
+                ) }}"
                      alt="Random Forest ROC Curve"
                      style="width:100%; border-radius:12px;">
-
-                {% endif %}
 
             </div>
 
@@ -316,33 +314,27 @@
                  style="text-align:center;">
 
                 <h3>
-                    Feature Importance
+                    Metrics Visualization
                 </h3>
 
-                {% if random_forest.importance_b64 %}
-
-                <img src="data:image/png;base64,{{ random_forest.importance_b64 }}"
-                     alt="Feature Importance"
+                <img src="{{ url_for(
+                    'static',
+                    filename='images/random_forest_metrics.png'
+                ) }}"
+                     alt="Metrics Visualization"
                      style="width:100%; border-radius:12px;">
-
-                {% endif %}
 
             </div>
 
             <div class="q-panel">
-
-                <h3>
-                    Sample Predictions
-                </h3>
-
-                <div style="overflow:auto;">
-
-                    {{ random_forest.predictions_html | safe }}
-
-                </div>
-
+                <h3>Prediction Analysis</h3>
+                <p>
+                    The Random Forest model produced highly stable predictions
+                    across the testing dataset, correctly identifying most
+                    agricultural pest propagation alerts with strong
+                    classification consistency.
+                </p>
             </div>
-
         </div>
 
     </section>
@@ -363,17 +355,20 @@
             <div>
 
                 <h2>
-                    Logistic Regression
+                    Logistic Regression Evaluation
                 </h2>
 
                 <p>
-                    Performance evaluation and classification metrics
-                    for Logistic Regression.
+                    Classification metrics, probability analysis,
+                    and validation results generated using
+                    Logistic Regression.
                 </p>
 
             </div>
 
         </div>
+
+        <!-- METRICS -->
 
         <div class="stats-bar">
 
@@ -427,137 +422,20 @@
 
         </div>
 
-        <div class="q-grid">
-
-            <div class="q-panel"
-                 style="text-align:center;">
-
-                <h3>
-                    ROC Curve
-                </h3>
-
-                {% if logistic_regression.roc_b64 %}
-
-                <img src="data:image/png;base64,{{ logistic_regression.roc_b64 }}"
-                     style="width:100%; border-radius:12px;">
-
-                {% endif %}
-
-            </div>
-
-            <div class="q-panel">
-
-                <h3>
-                    Classification Report
-                </h3>
-
-                <div style="overflow:auto;">
-
-                    {{ logistic_regression.classification_report_html | safe }}
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-    <!-- ================================= -->
-    <!-- DECISION TREE -->
-    <!-- ================================= -->
-
-    <section class="section"
-             id="decision-tree">
-
-        <div class="section-header">
-
-            <div class="section-icon">
-                🌲
-            </div>
-
-            <div>
-
-                <h2>
-                    Decision Tree Metrics
-                </h2>
-
-                <p>
-                    Statistical evaluation and regression metrics
-                    for the Decision Tree algorithm.
-                </p>
-
-            </div>
-
-        </div>
-
-        <!-- DECISION TREE STATS -->
-
-        <div class="stats-bar">
-
-            <div class="stat-item">
-
-                <div class="stat-value">
-                    81.5%
-                </div>
-
-                <div class="stat-label">
-                    Accuracy
-                </div>
-
-            </div>
-
-            <div class="stat-item">
-
-                <div class="stat-value">
-                    0.82
-                </div>
-
-                <div class="stat-label">
-                    F1 Score
-                </div>
-
-            </div>
-
-            <div class="stat-item">
-
-                <div class="stat-value">
-                    0.85
-                </div>
-
-                <div class="stat-label">
-                    R² Score
-                </div>
-
-            </div>
-
-            <div class="stat-item">
-
-                <div class="stat-value">
-                    0.18
-                </div>
-
-                <div class="stat-label">
-                    MAE
-                </div>
-
-            </div>
-
-        </div>
-
-        <!-- CLASSIFICATION METRICS -->
+        <!-- MODEL INFO -->
 
         <div class="q-grid">
 
             <div class="q-panel">
 
                 <h3>
-                    Precision
+                    Model Description
                 </h3>
 
                 <p>
-                    Indicates the reliability of positive pest alerts
-                    generated by the Decision Tree classifier.
+                    Logistic Regression estimates the probability
+                    of agricultural pest propagation using
+                    environmental and climate variables.
                 </p>
 
             </div>
@@ -565,39 +443,32 @@
             <div class="q-panel">
 
                 <h3>
-                    Accuracy
+                    Hyperparameter Configuration
                 </h3>
 
-                <p>
-                    Represents the percentage of correct predictions
-                    over the complete dataset.
-                </p>
+                <ul>
 
-            </div>
+                    <li>
+                        Solver:
+                        {{ logistic_regression.hyperparams.solver }}
+                    </li>
 
-            <div class="q-panel">
+                    <li>
+                        Max Iterations:
+                        {{ logistic_regression.hyperparams.max_iter }}
+                    </li>
 
-                <h3>
-                    Recall
-                </h3>
+                    <li>
+                        Regularization:
+                        {{ logistic_regression.hyperparams.C }}
+                    </li>
 
-                <p>
-                    Measures the model’s ability to detect
-                    real pest propagation cases.
-                </p>
+                    <li>
+                        Class Weight:
+                        {{ logistic_regression.hyperparams.class_weight }}
+                    </li>
 
-            </div>
-
-            <div class="q-panel">
-
-                <h3>
-                    F1 Score
-                </h3>
-
-                <p>
-                    Combined balance between Precision and Recall
-                    for classification evaluation.
-                </p>
+                </ul>
 
             </div>
 
@@ -614,12 +485,14 @@
                     Confusion Matrix
                 </h3>
 
-                <img src="{{ url_for(
-                    'static',
-                    filename='images/decision_tree_confusion_matrix.png'
-                ) }}"
+                {% if logistic_regression.confusion_b64 %}
+
+                <img src="data:image/png;base64,
+                {{ logistic_regression.confusion_b64 }}"
                      alt="Confusion Matrix"
                      style="width:100%; border-radius:12px;">
+
+                {% endif %}
 
             </div>
 
@@ -630,50 +503,338 @@
                     ROC Curve
                 </h3>
 
-                <img src="{{ url_for(
-                    'static',
-                    filename='images/decision_tree_roc_curve.png'
-                ) }}"
+                {% if logistic_regression.roc_b64 %}
+
+                <img src="data:image/png;base64,
+                {{ logistic_regression.roc_b64 }}"
                      alt="ROC Curve"
                      style="width:100%; border-radius:12px;">
+
+                {% endif %}
+
+            </div>
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    Metrics Visualization
+                </h3>
+
+                {% if logistic_regression.metrics_bar_b64 %}
+
+                <img src="data:image/png;base64,
+                {{ logistic_regression.metrics_bar_b64 }}"
+                     alt="Metrics Graph"
+                     style="width:100%; border-radius:12px;">
+
+                {% endif %}
+
+            </div>
+
+            <div class="q-panel"
+                 style="text-align:center;">
+
+                <h3>
+                    Feature Importance
+                </h3>
+
+                {% if logistic_regression.importance_b64 %}
+
+                <img src="data:image/png;base64,
+                {{ logistic_regression.importance_b64 }}"
+                     alt="Feature Importance"
+                     style="width:100%; border-radius:12px;">
+
+                {% endif %}
 
             </div>
 
         </div>
 
-        <!-- REGRESSION -->
+        <!-- CROSS VALIDATION -->
 
         <div class="q-grid">
 
-            <div class="q-panel">
+            <div class="q-panel"
+                 style="text-align:center;">
 
                 <h3>
-                    MAE & MSE
+                    Cross Validation Scores
                 </h3>
 
-                <p>
-                    Error metrics used to evaluate prediction
-                    deviations against real agricultural values.
-                </p>
+                {% if logistic_regression.cv_b64 %}
+
+                <img src="data:image/png;base64,
+                {{ logistic_regression.cv_b64 }}"
+                     alt="Cross Validation"
+                     style="width:100%; border-radius:12px;">
+
+                {% endif %}
 
             </div>
 
             <div class="q-panel">
 
                 <h3>
-                    RMSE & R²
+                    Validation Statistics
                 </h3>
 
-                <p>
-                    Metrics representing residual standard deviation
-                    and explained variance of the model.
-                </p>
+                <ul>
+
+                    <li>
+                        Mean CV Score:
+                        {{ logistic_regression.cv_mean }}
+                    </li>
+
+                    <li>
+                        Standard Deviation:
+                        {{ logistic_regression.cv_std }}
+                    </li>
+
+                    <li>
+                        Training Samples:
+                        {{ logistic_regression.train_size }}
+                    </li>
+
+                    <li>
+                        Testing Samples:
+                        {{ logistic_regression.test_size }}
+                    </li>
+
+                    <li>
+                        Number of Features:
+                        {{ logistic_regression.n_features }}
+                    </li>
+
+                </ul>
+
+            </div>
+
+        </div>
+
+        <!-- CLASSIFICATION REPORT -->
+
+        <div class="q-panel">
+
+            <h3>
+                Classification Report
+            </h3>
+
+            <div style="overflow:auto;">
+
+                {{ logistic_regression.classification_report_html | safe }}
+
+            </div>
+
+        </div>
+
+        <!-- SAMPLE PREDICTIONS -->
+
+        <div class="q-panel">
+
+            <h3>
+                Sample Predictions
+            </h3>
+
+            <div style="overflow:auto;">
+
+                {{ logistic_regression.predictions_html | safe }}
 
             </div>
 
         </div>
 
     </section>
+
+    <!-- ================================= -->
+    <!-- DECISION TREE -->
+    <!-- ================================= -->
+
+    <!-- ================================= -->
+<!-- DECISION TREE -->
+<!-- ================================= -->
+
+<section class="section"
+         id="decision-tree">
+
+    <div class="section-header">
+
+        <div class="section-icon">
+            🌲
+        </div>
+
+        <div>
+
+            <h2>
+                Decision Tree Evaluation
+            </h2>
+
+            <p>
+                Classification metrics and performance analysis
+                generated using the Decision Tree algorithm.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- METRICS -->
+
+    <div class="stats-bar">
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                {{ decision_tree.accuracy }}
+            </div>
+
+            <div class="stat-label">
+                Accuracy
+            </div>
+
+        </div>
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                {{ decision_tree.precision }}
+            </div>
+
+            <div class="stat-label">
+                Precision
+            </div>
+
+        </div>
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                {{ decision_tree.recall }}
+            </div>
+
+            <div class="stat-label">
+                Recall
+            </div>
+
+        </div>
+
+        <div class="stat-item">
+
+            <div class="stat-value">
+                {{ decision_tree.f1_score }}
+            </div>
+
+            <div class="stat-label">
+                F1 Score
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- DESCRIPTION -->
+
+    <div class="q-grid">
+
+        <div class="q-panel">
+
+            <h3>
+                Model Description
+            </h3>
+
+            <p>
+                Decision Tree is a supervised machine learning
+                algorithm that learns hierarchical decision rules
+                from agricultural and climate data to classify
+                pest propagation alerts.
+            </p>
+
+        </div>
+
+        <div class="q-panel">
+
+            <h3>
+                Training Process
+            </h3>
+
+            <p>
+                The dataset was divided into training and testing
+                subsets using an 80/20 split ratio. The model
+                learned classification patterns from environmental
+                and agricultural variables.
+            </p>
+
+        </div>
+
+        <div class="q-panel">
+
+            <h3>
+                Validation Process
+            </h3>
+
+            <p>
+                The model was validated using classification metrics
+                including Accuracy, Precision, Recall,
+                and F1 Score.
+            </p>
+
+        </div>
+
+        <div class="q-panel">
+
+            <h3>
+                Model Interpretation
+            </h3>
+
+            <p>
+                Decision Trees are highly interpretable because
+                predictions can be explained through sequential
+                decision rules generated during training.
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- VISUALIZATIONS -->
+
+    <div class="q-grid">
+
+        <div class="q-panel"
+             style="text-align:center;">
+
+            <h3>
+                Confusion Matrix
+            </h3>
+
+            <img src="{{ url_for(
+                'static',
+                filename='images/decision_tree_confusion_matrix.png'
+            ) }}"
+                alt="Decision Tree Confusion Matrix"
+                style="width:100%; border-radius:12px;">
+
+        </div>
+
+        <div class="q-panel"
+             style="text-align:center;">
+
+            <h3>
+                Feature Importance
+            </h3>
+
+            <img src="{{ url_for(
+                'static',
+                filename='images/decision_tree_feature_importance.png'
+            ) }}"
+                alt="Decision Tree Feature Importance"
+                style="width:100%; border-radius:12px;">
+
+        </div>
+    </div>
+
+</section>
 
     <!-- ================================= -->
     <!-- MODEL COMPARISON -->
@@ -734,81 +895,97 @@
 
                     <tr>
 
-                        <td>
-                            Accuracy
-                        </td>
+                        <td>Accuracy</td>
 
-                        <td>
-                            {{ random_forest.accuracy }}
-                        </td>
+                        <td>{{ random_forest.accuracy }}</td>
 
-                        <td>
-                            {{ logistic_regression.accuracy }}
-                        </td>
+                        <td>{{ logistic_regression.accuracy }}</td>
 
-                        <td>
-                            81.5%
-                        </td>
+                        <td>81.5%</td>
 
                     </tr>
 
                     <tr>
 
-                        <td>
-                            Precision
-                        </td>
+                        <td>Precision</td>
 
-                        <td>
-                            {{ random_forest.precision }}
-                        </td>
+                        <td>{{ random_forest.precision }}</td>
 
-                        <td>
-                            {{ logistic_regression.precision }}
-                        </td>
+                        <td>{{ logistic_regression.precision }}</td>
 
-                        <td>
-                            80.2%
-                        </td>
+                        <td>80.2%</td>
 
                     </tr>
 
                     <tr>
 
-                        <td>
-                            Recall
-                        </td>
+                        <td>Recall</td>
 
-                        <td>
-                            {{ random_forest.recall }}
-                        </td>
+                        <td>{{ random_forest.recall }}</td>
 
-                        <td>
-                            {{ logistic_regression.recall }}
-                        </td>
+                        <td>{{ logistic_regression.recall }}</td>
 
-                        <td>
-                            83.1%
-                        </td>
+                        <td>83.1%</td>
 
                     </tr>
 
                     <tr>
 
-                        <td>
-                            F1 Score
-                        </td>
+                        <td>F1 Score</td>
 
-                        <td>
-                            {{ random_forest.f1_score }}
-                        </td>
+                        <td>{{ random_forest.f1_score }}</td>
 
-                        <td>
-                            {{ logistic_regression.f1_score }}
-                        </td>
+                        <td>{{ logistic_regression.f1_score }}</td>
 
-                        <td>
-                            81.6%
-                        </td>
+                        <td>81.6%</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>ROC AUC</td>
+
+                        <td>0.92</td>
+
+                        <td>{{ logistic_regression.roc_auc }}</td>
+
+                        <td>0.84</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Training Speed</td>
+
+                        <td>Medium</td>
+
+                        <td>Fast</td>
+
+                        <td>Fast</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Overfitting Risk</td>
+
+                        <td>Low</td>
+
+                        <td>Low</td>
+
+                        <td>High</td>
+
+                    </tr>
+
+                    <tr>
+
+                        <td>Final Ranking</td>
+
+                        <td>🥇 Best Model</td>
+
+                        <td>🥈 Second</td>
+
+                        <td>🥉 Third</td>
 
                     </tr>
 
@@ -853,10 +1030,11 @@
             </h3>
 
             <p>
-                The selected model will be determined according to
-                Accuracy, Precision, Recall, F1 Score,
-                ROC AUC, interpretability,
-                and generalization performance.
+                Random Forest was selected as the final model because
+                it achieved the highest Accuracy, ROC AUC,
+                and overall classification performance while
+                maintaining strong generalization capabilities
+                and lower overfitting risk compared to the other models.
             </p>
 
         </div>
