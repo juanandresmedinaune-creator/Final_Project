@@ -4,18 +4,37 @@ import joblib
 
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.pipeline import Pipeline
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OrdinalEncoder
 
 data = pd.read_csv("processed_alerts.csv")
 
 X = data.drop(columns=['pest_alert'])
 y = data['pest_alert']
 
-X_train, X_test, y_train, y_test = train_test_split (
-    X,y,test_size=0.2, random_state=42
+categorical_cols = [
+    "department",
+    "crop",
+    "year",
+    "season",
+    "pest_name",
+    "species"
+]
+
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("cat", OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1), categorical_cols)
+    ],
+    remainder="passthrough"
 )
 
-print("Training rows: ", X_train.shape[0])
-print("Testing rows: ", X_test.shape[0])
+X_train, X_test, y_train, y_test = train_test_split(
+    X,y,test_size=0.2,random_state=42
+)
+
+print("Training rows:", X_train.shape[0])
+print("Testing rows:", X_test.shape[0])
 
 model = RandomForestClassifier(
     n_estimators=200,
@@ -24,56 +43,27 @@ model = RandomForestClassifier(
     random_state=42
 )
 
-model.fit(X_train, y_train)
+pipeline = Pipeline(steps=[
+    ("preprocessor", preprocessor),
+    ("model", model)
+])
 
-#Predictions
+pipeline.fit(X_train, y_train)
 
-y_pred = model.predict(X_test)
+accuracy = pipeline.score(X_test, y_test)
+print("\nModel Accuracy:", accuracy)
 
-predictions_df = pd.DataFrame({
-    "real_value": y_test.values[:10],
-    "predicted_value": y_pred[:10]
-})
+model_fitted = pipeline.named_steps["model"]
+importance = model_fitted.feature_importances_
 
-predictions_df["status"] = (
-    predictions_df["real_value"] ==
-    predictions_df["predicted_value"]
-)
+feature_names = pipeline.named_steps["preprocessor"].get_feature_names_out()
 
-predictions_df["status"] = predictions_df["status"].map({
-    True: "Correct Prediction",
-    False: "Prediction Error"
-})
+importance_df = pd.DataFrame({
+    "Feature": feature_names,
+    "Importance": importance
+}).sort_values(by="Importance", ascending=True)
 
-predictions_df.to_csv(
-    "predictions.csv",
-    index=False
-)
-
-print("\nExample Predictions:")
-
-examples = pd.DataFrame({
-    "Real Value": y_test[:10].values,
-    "Predicted Value": y_pred[:10]
-})
-
-print(examples)
-
-importance = model.feature_importances_
-
-features = X.columns
-
-importance_df= pd.DataFrame({
-    'Feature': features,
-    'Importance': importance
-})
-
-importance_df = importance_df.sort_values(
-    by='Importance',
-    ascending=True
-)
-
-plt.figure(figsize=(10,6))
+plt.figure(figsize=(10, 6))
 
 plt.barh(
     importance_df['Feature'],
@@ -90,8 +80,7 @@ plt.tight_layout()
 plt.savefig("static/feature_importance.png")
 
 print("\nFeature importance graph saved.")
-print(data['pest_alert'].value_counts())
 
-#Save Model
+joblib.dump(pipeline, "random_forest_model.pkl")
 
-joblib.dump(model, "random_forest_model.pkl")
+print("\nModel saved successfully.")
