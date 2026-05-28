@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder, MinMaxScaler
 
-data = pd.read_csv('alertas_plagas.csv')
+data = pd.read_csv('alertas_plagas.csv', encoding="utf-8", dtype=str)
 
 # Clean csv format
 data.columns = data.columns.str.strip()
@@ -14,6 +14,16 @@ data['season'] = data['period'].astype(str).str[-1]
 
 #Remove original colum
 data.drop(columns=['period'], inplace=True)
+
+numeric_cols = [
+    'yield_t_ha',
+    'relative_yield',
+    'avg_temperature',
+    'total_precipitation'
+]
+
+for col in numeric_cols:
+    data[col] = pd.to_numeric(data[col], errors='coerce')
 
 # Handling empty variables
 
@@ -45,6 +55,23 @@ data['category_rain'] = pd.cut(
     labels=['low', 'medium', 'high']
 )
 
+crop_translation = {
+
+    "Arroz": "Rice",
+    "Café": "Coffee",
+    "Caña de azúcar": "Sugar Cane",
+    "Cebolla": "Onion",
+    "Maíz": "Corn",
+    "Papa": "Potato",
+    "Plátano": "Banana",
+    "Tomate": "Tomato"
+
+}
+
+data["crop"] = data["crop"].replace(
+    crop_translation
+)
+
 labels_col = [
     'department','municipality','crop','year','season', 'pest_name', 'species','category_temp',
     'category_rain'
@@ -53,7 +80,10 @@ labels_col = [
 le = LabelEncoder()
 
 for col in labels_col:
-    data[col] = le.fit_transform(data[col].astype(str))
+
+    data[col] = le.fit_transform(
+        data[col].astype(str)
+    )
 
 # Standardization
 
